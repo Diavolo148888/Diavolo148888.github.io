@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Mark Alojado — IT Support & Cybersecurity</title>
+<meta name="description" content="Portfolio of John Mark Alojado — BSIT student, IT support and cybersecurity specialist. 7 open-source security tools, systems work, and awarded engineering projects.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<style>
+:root {
+  --bg: #0a0e14;
+  --bg2: #0f141c;
+  --card: #131a24;
+  --border: #1e2836;
+  --text: #d6e2f0;
+  --muted: #8494ac;
+  --accent: #22d3ee;
+  --accent2: #a78bfa;
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- nav ---------- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10, 14, 20, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 clamp(1rem, 5vw, 3rem);
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav-logo { font-weight: 700; color: var(--text); font-size: 1.05rem; letter-spacing: 0.02em; }
+.nav-logo span { color: var(--accent); }
+nav ul { display: flex; gap: clamp(0.8rem, 2vw, 2rem); list-style: none; }
+nav ul a { color: var(--muted); font-size: 0.92rem; font-weight: 500; }
+nav ul a:hover { color: var(--text); text-decoration: none; }
+
+/* ---------- layout ---------- */
+section { max-width: 1080px; margin: 0 auto; padding: clamp(3rem, 8vw, 5.5rem) 1.5rem; }
+.tag { color: var(--accent); font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.82rem; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin: 0.4rem 0 1.4rem; }
+h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
+
+/* ---------- hero ---------- */
+#hero {
+  min-height: 92vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 6rem;
+  position: relative;
+}
+#hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(600px 400px at 85% 15%, rgba(34, 211, 238, 0.07), transparent 70%),
+    radial-gradient(700px 500px at 10% 85%, rgba(167, 139, 250, 0.07), transparent 70%);
+  pointer-events: none;
+}
+.hero-title { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.1; margin: 1rem 0; }
+.hero-title .grad {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub { color: var(--muted); font-size: clamp(1rem, 2vw, 1.2rem); max-width: 640px; }
+.hero-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.6rem; }
+.badge {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--muted); padding: 0.35rem 0.85rem; border-radius: 999px;
+  font-size: 0.82rem;
+}
+.badge b { color: var(--text); font-weight: 600; }
+.hero-cta { display: flex; gap: 1rem; margin-top: 2.2rem; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 0.75rem 1.6rem; border-radius: 10px;
+  font-weight: 600; font-size: 0.95rem; transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:hover { transform: translateY(-2px); text-decoration: none; }
+.btn-primary { background: linear-gradient(90deg, #0891b2, #7c3aed); color: #fff; box-shadow: 0 4px 24px rgba(34, 211, 238, 0.25); }
+.btn-ghost { border: 1px solid var(--border); color: var(--text); background: var(--card); }
+
+/* ---------- stats ---------- */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+.stat {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.2rem; text-align: center;
+}
+.stat .num { font-size: 1.9rem; font-weight: 800; color: var(--accent); }
+.stat .lbl { color: var(--muted); font-size: 0.85rem; }
+
+/* ---------- projects ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.2rem; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover { border-color: #2e3d52; transform: translateY(-3px); }
+.card-head { display: flex; align-items: center; gap: 0.8rem; }
+.card-icon {
+  width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.15);
+}
+.card h3 { font-size: 1.08rem; font-weight: 700; }
+.card h3 a { color: var(--text); }
+.card p { color: var(--muted); font-size: 0.9rem; flex-grow: 1; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chip {
+  font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 999px;
+  background: var(--bg2); border: 1px solid var(--border); color: var(--accent);
+  font-family: 'Cascadia Code', monospace;
+}
+.card-links { display: flex; gap: 1rem; margin-top: auto; padding-top: 0.4rem; }
+.card-links a { font-size: 0.82rem; font-weight: 600; }
+
+/* ---------- experience timeline ---------- */
+.timeline { position: relative; padding-left: 1.6rem; border-left: 2px solid var(--border); }
+.titem { margin-bottom: 2rem; }
+.titem .when { color: var(--accent); font-family: monospace; font-size: 0.8rem; }
+.titem h3 { font-size: 1.05rem; margin: 0.2rem 0; }
+.titem .org { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
+.titem ul { color: var(--muted); font-size: 0.9rem; padding-left: 1.2rem; }
+.titem ul li { margin-bottom: 0.35rem; }
+
+/* ---------- skills ---------- */
+.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.skill-cat {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.2rem;
+}
+.skill-cat h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 0.6rem; }
+.skill-cat ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.skill-cat li {
+  background: var(--bg2); border: 1px solid var(--border);
+  padding: 0.25rem 0.7rem; border-radius: 8px; font-size: 0.82rem; color: var(--text);
+}
+
+/* ---------- resume CTA ---------- */
+.resume-box {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.06), rgba(167, 139, 250, 0.06));
+  border: 1px solid var(--border); border-radius: 18px;
+  padding: clamp(1.6rem, 4vw, 2.6rem); text-align: center;
+}
+.resume-box h2 { margin-top: 0; }
+.resume-box p { color: var(--muted); max-width: 560px; margin: 0 auto 1.6rem; }
+
+/* ---------- footer ---------- */
+footer {
+  border-top: 1px solid var(--border); color: var(--muted);
+  text-align: center; padding: 2.2rem 1rem; font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  nav ul { gap: 0.9rem; }
+  nav ul a { font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">johnmark<span>.dev</span></div>
+  <ul>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="resume.html">Résumé</a></li>
+    <li><a href="https://github.com/Diavolo148888" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section id="hero">
+  <div class="tag">~ $ whoami</div>
+  <h1 class="hero-title">John Mark <span class="grad">Alojado</span></h1>
+  <p class="hero-sub">
+    BSIT student and hands-on IT support & cybersecurity specialist from Baler, Aurora 🇵🇭.
+    I build security tooling people actually use — port scanners, phishing detectors,
+    log analyzers — and keep the systems around me running.
+  </p>
+  <div class="hero-badges">
+    <div class="badge">🎓 BSIT @ <b>Central Luzon State University</b></div>
+    <div class="badge">🛡️ <b>8</b> open-source tools incl. civic tech</div>
+    <div class="badge">🏆 Best Innovation Award · 1st Place Division</div>
+    <div class="badge">🐧 Linux · Fedora · Docker</div>
+  </div>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#projects">View my work →</a>
+    <a class="btn btn-ghost" href="resume.html">Read my résumé</a>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section id="stats">
+  <div class="stats">
+    <div class="stat"><div class="num">8</div><div class="lbl">open-source tools shipped</div></div>
+    <div class="stat"><div class="num">137</div><div class="lbl">tests passing across repos</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">external dependencies</div></div>
+    <div class="stat"><div class="num">2</div><div class="lbl">competition awards</div></div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects">
+  <div class="tag">~/portfolio</div>
+  <h2><span class="n">01.</span>Security Tooling</h2>
+  <p style="color: var(--muted); max-width: 640px; margin-bottom: 1.8rem;">
+    A coherent toolkit I designed, built, and tested end-to-end — each repo is a
+    working, zero-dependency Python security tool with a real test suite.
+  </p>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">📡</div>
+        <h3><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">netrecon</a></h3>
+      </div>
+      <p>Async TCP port scanner with service fingerprinting and banner grabbing. 500 concurrent connections, 60+ service signatures, JSON/CSV export.</p>
+      <div class="chips"><span class="chip">asyncio</span><span class="chip">recon</span><span class="chip">17 tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🎣</div>
+        <h3><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">phishguard</a></h3>
+      </div>
+      <p>Static phishing URL detector — 30+ lexical heuristics: brand spoofing, IDN homoglyphs, credential-bait keywords. Scores any URL 0–100, fully offline.</p>
+      <div class="chips"><span class="chip">heuristics</span><span class="chip">OSINT</span><span class="chip">21 tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🔓</div>
+        <h3><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">hashbreak</a></h3>
+      </div>
+      <p>Hash identification for 18+ formats, rule-augmented dictionary cracking with salt support, and offline password strength auditing.</p>
+      <div class="chips"><span class="chip">crypto</span><span class="chip">audit</span><span class="chip">27 tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">📊</div>
+        <h3><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">logsentinel</a></h3>
+      </div>
+      <p>SSH/auth log intrusion analysis: brute-force bursts, password-spray campaigns, and the alert that matters — successful logins after failed ones.</p>
+      <div class="chips"><span class="chip">SIEM</span><span class="chip">blue team</span><span class="chip">16 tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">📜</div>
+        <h3><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">certwatch</a></h3>
+      </div>
+      <p>TLS certificate watchdog: expiry countdown, self-signed detection via CA validation, weak-key flags, wildcard-aware hostname/SAN matching.</p>
+      <div class="chips"><span class="chip">TLS</span><span class="chip">x509</span><span class="chip">live-tested</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🔎</div>
+        <h3><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">redact</a></h3>
+      </div>
+      <p>Secret scanner with 20+ credential rules — AWS keys, GitHub tokens, PEM blocks, DB URIs — entropy-filtered, with in-place auto-redaction.</p>
+      <div class="chips"><span class="chip">CI gate</span><span class="chip">regex</span><span class="chip">17 tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🛡️</div>
+        <h3><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">sysarmor</a></h3>
+      </div>
+      <p>Linux hardening auditor: CIS-style checks on SSH config, permissions, sysctl, accounts — scores a host 0–100 with per-check remediation.</p>
+      <div class="chips"><span class="chip">CIS</span><span class="chip">hardening</span><span class="chip">16 tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🇵🇭</div>
+        <h3><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">UlatBayan</a></h3>
+      </div>
+      <p>Barangay complaint & reporting system — full-stack civic app in one file, zero dependencies. Residents file & track reports; officials triage behind PBKDF2 auth; public transparency board shows the community what's being done.</p>
+      <div class="chips"><span class="chip">civic-tech</span><span class="chip">fullstack</span><span class="chip">CSRF/XSS-hardened</span><span class="chip">18 e2e tests</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🌦️</div>
+        <h3><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">Weather App (Baler)</a></h3>
+      </div>
+      <p>Localized weather forecasting platform integrating real-time OpenWeather API streams — won <b>Best Innovation Award</b> at its competition debut.</p>
+      <div class="chips"><span class="chip">HTML/CSS/JS</span><span class="chip">REST API</span><span class="chip">award-winning</span></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">→ repo</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience">
+  <div class="tag">cat experience.log</div>
+  <h2><span class="n">02.</span>Experience</h2>
+  <div class="timeline">
+
+    <div class="titem">
+      <div class="when">2024 — present</div>
+      <h3>IT Support & Cybersecurity Technical Lead</h3>
+      <div class="org">Systems Support & Software Operations — Philippines</div>
+      <ul>
+        <li>Diagnosed and reconfigured hardware, OSes, and network settings across multiple systems; applied structured root-cause analysis for Tier-1 resolution of OS glitches, driver conflicts, and network breakage.</li>
+        <li>Audited system logs and desktop environments for suspicious processes, malware, and persistence mechanisms.</li>
+        <li>Conducted security code reviews and vulnerability assessments on custom applications before deployment.</li>
+        <li>Provisioned and managed dual-boot Windows/Linux (Fedora, CachyOS) environments and Docker-based infrastructure.</li>
+      </ul>
+    </div>
+
+    <div class="titem">
+      <div class="when">2023 — 2026</div>
+      <h3>Operations & Technical Support Assistant</h3>
+      <div class="org">Family Retail Business & Bubble Tea Shop</div>
+      <ul>
+        <li>Supported daily operations 2+ years: 50+ transactions/day with zero cash discrepancies.</li>
+        <li>Troubleshot POS systems under live business pressure to minimize customer-facing downtime.</li>
+        <li>Built inventory workflows with Google Sheets (VLOOKUP, pivot tables) and trained new staff.</li>
+      </ul>
+    </div>
+
+    <div class="titem">
+      <div class="when">2025 — 2026</div>
+      <h3>Vice President — Computer Society</h3>
+      <div class="org">Aurora National Science High School</div>
+      <ul>
+        <li>Led technical workshops on hardware assembly, troubleshooting, and networking for a 300+ member community.</li>
+        <li>Managed cross-functional teams delivering custom technical solutions for institutional events.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= AWARDS ================= -->
+<section id="awards">
+  <div class="tag">ls -la trophies/</div>
+  <h2><span class="n">03.</span>Awards & Highlights</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🏆</div><h3>Best Innovation Award</h3></div>
+      <p>Localized weather forecasting platform with real-time OpenWeather API integration, recognized for practical impact.</p>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🥇</div><h3>1st Place — Division Level</h3></div>
+      <p>Smart AI Energy-Saving Optimization System: IoT microcontroller device with decision logic optimizing power distribution.</p>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🏫</div><h3>Classroom Software in Production</h3></div>
+      <p>Custom educational applications developed with two high-school teachers — still used in live classroom instruction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills">
+  <div class="tag">uname -a && python3 --version</div>
+  <h2><span class="n">04.</span>Skills</h2>
+  <div class="skills">
+    <div class="skill-cat">
+      <h3>Security</h3>
+      <ul>
+        <li>Nmap & network recon</li>
+        <li>Log analysis</li>
+        <li>Vulnerability scanning</li>
+        <li>Malware analysis</li>
+        <li>Security code review</li>
+      </ul>
+    </div>
+    <div class="skill-cat">
+      <h3>Systems</h3>
+      <ul>
+        <li>Linux (Fedora, CachyOS)</li>
+        <li>Bash scripting</li>
+        <li>Docker</li>
+        <li>systemctl / journald</li>
+        <li>Dual-boot provisioning</li>
+      </ul>
+    </div>
+    <div class="skill-cat">
+      <h3>Development</h3>
+      <ul>
+        <li>Python</li>
+        <li>C/C++</li>
+        <li>HTML/CSS/JS</li>
+        <li>SQL & REST APIs</li>
+        <li>Git/GitHub</li>
+      </ul>
+    </div>
+    <div class="skill-cat">
+      <h3>IT Support</h3>
+      <ul>
+        <li>Hardware diagnostics</li>
+        <li>OS installation & repair</li>
+        <li>Network troubleshooting</li>
+        <li>Technical documentation</li>
+        <li>Customer-facing support</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESUME CTA ================= -->
+<section id="resume">
+  <div class="resume-box">
+    <div class="tag">wget resume.pdf</div>
+    <h2>Want the full picture?</h2>
+    <p>One page with everything: education timeline, detailed project bullets, leadership history, and contact information.</p>
+    <a class="btn btn-primary" href="resume.html">View résumé →</a>
+  </div>
+</section>
+
+<footer>
+  Built with vanilla HTML/CSS — no frameworks, no trackers.
+  <br>© 2026 John Mark Alojado · Baler, Aurora, Philippines ·
+  <a href="https://github.com/Diavolo148888" target="_blank" rel="noopener">GitHub</a> ·
+  <a href="https://www.linkedin.com/in/john-mark-alojado" target="_blank" rel="noopener">LinkedIn</a>
+</footer>
+
+</body>
+</html>
