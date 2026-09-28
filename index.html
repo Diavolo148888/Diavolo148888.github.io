@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>John Mark Alojado — IT Support & Cybersecurity</title>
 <meta name="description" content="Portfolio of John Mark Alojado — BSIT student, IT support and cybersecurity specialist. 10 open-source security tools, systems work, and awarded engineering projects.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%2322d3ee' d='M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z'/></svg>">
 <style>
 :root {
   --bg: #0a0e14;
@@ -17,8 +17,6 @@
   --accent: #22d3ee;
   --accent2: #a78bfa;
   --green: #34d399;
-  --amber: #fbbf24;
-  --red: #f87171;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -31,6 +29,9 @@ body {
 }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* ---------- svg icons ---------- */
+.icn { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- nav ---------- */
 nav {
@@ -65,14 +66,25 @@ section { max-width: 1080px; margin: 0 auto; padding: clamp(3rem, 8vw, 5.5rem) 1
 h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin: 0.4rem 0 1.4rem; }
 h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 
-/* ---------- scroll reveal ---------- */
-.reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--d, 0s);
-}
-.reveal.revealed { opacity: 1; transform: translateY(0); }
+/* ---------- reveal base + per-section variants ---------- */
+.reveal { opacity: 0; transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: var(--d, 0s); }
+.reveal.revealed { opacity: 1; }
+
+/* stats + resume CTA rise from below */
+#stats .reveal, #resume .reveal { transform: translateY(28px); }
+#stats .reveal.revealed, #resume .reveal.revealed { transform: translateY(0); }
+
+/* projects flip up like terminal boot */
+#projects .card.reveal { transform: perspective(900px) rotateX(7deg) translateY(30px); transform-origin: top center; }
+#projects .card.reveal.revealed { transform: perspective(900px) rotateX(0) translateY(0); }
+
+/* awards swing in from the left */
+#awards .card.reveal { transform: perspective(900px) rotateY(-14deg) translateX(-26px); transform-origin: left center; }
+#awards .card.reveal.revealed { transform: perspective(900px) rotateY(0) translateX(0); }
+
+/* skills scale in */
+#skills .skill-cat.reveal { transform: translateY(30px) scale(0.96); }
+#skills .skill-cat.reveal.revealed { transform: translateY(0) scale(1); }
 
 /* ---------- hero ---------- */
 #hero {
@@ -114,6 +126,24 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 }
 @keyframes gradFlow { to { background-position: 200% center; } }
 .hero-sub { color: var(--muted); font-size: clamp(1rem, 2vw, 1.2rem); max-width: 640px; }
+
+/* project ticker: sendthesong-style letter animation cycling the repos */
+.ticker {
+  margin-top: 1.4rem;
+  font-family: 'Cascadia Code', 'Fira Code', monospace;
+  font-size: 0.95rem;
+  color: var(--green);
+  min-height: 1.5em;
+  display: flex; align-items: center; gap: 0.4em;
+}
+.ticker .lbl { color: var(--muted); font-size: 0.8rem; }
+.ticker .git-path { white-space: nowrap; overflow: hidden; }
+.ticker .cursor {
+  display: inline-block; width: 0.55em; height: 1.05em;
+  background: var(--green); flex-shrink: 0;
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
 
 /* profile photo with rotating ring */
 .profile-wrap { position: relative; width: 190px; height: 190px; flex-shrink: 0; }
@@ -157,8 +187,8 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 .hero-cta { display: flex; gap: 1rem; margin-top: 2.2rem; flex-wrap: wrap; }
 .btn {
   display: inline-block; padding: 0.75rem 1.6rem; border-radius: 10px;
-  font-weight: 600; font-size: 0.95rem; transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
-  background-size: 200% auto;
+  font-weight: 600; font-size: 0.95rem;
+  transition: transform 0.15s, box-shadow 0.15s, background-position 0.4s;
 }
 .btn:hover { transform: translateY(-2px); text-decoration: none; }
 .btn-primary {
@@ -170,28 +200,25 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 .btn-ghost { border: 1px solid var(--border); color: var(--text); background: var(--card); }
 .btn-ghost:hover { border-color: var(--accent); }
 
-/* typewriter cursor */
-.typeline { min-height: 1.4em; white-space: pre-wrap; }
-.cursor {
-  display: inline-block; width: 0.55em; height: 1.05em;
-  background: var(--accent); margin-left: 2px;
-  vertical-align: text-bottom;
-  animation: blink 1s steps(1) infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
-/* ---------- stats ---------- */
+/* ---------- stats: decrypt-style counters + scanline hover ---------- */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
 .stat {
   background: var(--card); border: 1px solid var(--border); border-radius: 14px;
   padding: 1.2rem; text-align: center;
   transition: border-color 0.25s, transform 0.25s;
+  position: relative; overflow: hidden;
 }
 .stat:hover { border-color: var(--accent); transform: translateY(-4px); }
 .stat .num { font-size: 1.9rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
 .stat .lbl { color: var(--muted); font-size: 0.85rem; }
+.stat::after {
+  content: ""; position: absolute; inset: 0; border-radius: 14px;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(34, 211, 238, 0.05) 2px 3px);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.stat:hover::after { opacity: 1; }
 
-/* ---------- projects ---------- */
+/* ---------- project cards ---------- */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.2rem; }
 .card {
   background: var(--card); border: 1px solid var(--border); border-radius: 16px;
@@ -210,7 +237,7 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 .card-icon {
   width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; background: rgba(34, 211, 238, 0.08);
+  background: rgba(34, 211, 238, 0.08);
   border: 1px solid rgba(34, 211, 238, 0.15);
   transition: transform 0.25s;
 }
@@ -228,9 +255,10 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 .card-links { display: flex; gap: 1rem; margin-top: auto; padding-top: 0.4rem; }
 .card-links a { font-size: 0.82rem; font-weight: 600; }
 
-/* ---------- experience timeline ---------- */
+/* ---------- experience: timeline with radar ping ---------- */
 .timeline { position: relative; padding-left: 1.6rem; border-left: 2px solid var(--border); }
-.titem { margin-bottom: 2rem; position: relative; }
+.titem { margin-bottom: 2rem; position: relative; opacity: 0; transform: translateX(-24px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.titem.revealed { opacity: 1; transform: translateX(0); }
 .titem::before {
   content: ""; position: absolute; left: -1.75rem; top: 0.35rem;
   width: 12px; height: 12px; border-radius: 50%;
@@ -238,6 +266,16 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
   transition: background 0.3s, box-shadow 0.3s;
 }
 .titem:hover::before { background: var(--accent); box-shadow: 0 0 12px rgba(34, 211, 238, 0.5); }
+.titem::after {
+  content: ""; position: absolute; left: -1.75rem; top: 0.35rem;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); opacity: 0;
+}
+.titem.revealed::after { animation: ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+@keyframes ping {
+  0% { opacity: 0.7; transform: scale(1); }
+  70%, 100% { opacity: 0; transform: scale(2.6); }
+}
 .titem .when { color: var(--accent); font-family: monospace; font-size: 0.8rem; }
 .titem h3 { font-size: 1.05rem; margin: 0.2rem 0; }
 .titem .org { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
@@ -257,7 +295,7 @@ h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
 .skill-cat li {
   background: var(--bg2); border: 1px solid var(--border);
   padding: 0.25rem 0.7rem; border-radius: 8px; font-size: 0.82rem; color: var(--text);
-  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  transition: border-color 0.2s, transform 0.2s;
 }
 .skill-cat li:hover { border-color: var(--accent); transform: translateY(-2px); }
 
@@ -282,12 +320,13 @@ footer {
   .hero-row { flex-direction: column-reverse; text-align: center; }
   .hero-sub { margin: 0 auto; }
   .hero-badges, .hero-cta { justify-content: center; }
+  .ticker { justify-content: center; }
   .profile-wrap, .profile-img { width: 150px; height: 150px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; transform: none; }
+  .reveal, .titem, #projects .card.reveal, #awards .card.reveal, #skills .skill-cat.reveal { opacity: 1; transform: none; }
   .badge { opacity: 1; transform: none; }
   nav { transform: translateY(0); }
 }
@@ -301,7 +340,7 @@ footer {
     <li><a href="#projects">Projects</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="resume.html">Résumé</a></li>
+    <li><a href="resume.html">Resume</a></li>
     <li><a href="https://github.com/Diavolo148888" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
 </nav>
@@ -309,24 +348,29 @@ footer {
 <!-- ================= HERO ================= -->
 <section id="hero">
   <div class="grid-bg"></div>
-  <div class="tag typeline" id="typeline"><span class="cursor"></span></div>
+  <div class="tag">~ $ whoami</div>
   <h1 class="hero-title">John Mark <span class="grad">Alojado</span></h1>
   <div class="hero-row">
     <div>
       <p class="hero-sub">
-        BSIT student and hands-on IT support & cybersecurity specialist from Baler, Aurora 🇵🇭.
+        BSIT student and hands-on IT support & cybersecurity specialist from Baler, Aurora, Philippines.
         I build security tooling people actually use — port scanners, phishing detectors,
         log analyzers — and keep the systems around me running.
       </p>
+      <div class="ticker">
+        <span class="lbl">git clone</span>
+        <span class="git-path" id="ticker-path">https://github.com/Diavolo148888/netrecon</span>
+        <span class="cursor"></span>
+      </div>
       <div class="hero-badges">
-        <div class="badge">🎓 BSIT @ <b>Central Luzon State University</b></div>
-        <div class="badge">🛡️ <b>10</b> open-source tools incl. civic tech</div>
-        <div class="badge">🏆 Best Innovation Award · 1st Place Division</div>
-        <div class="badge">🐧 Linux · Fedora · Docker</div>
+        <div class="badge">BSIT @ <b>Central Luzon State University</b></div>
+        <div class="badge"><b>10</b> open-source tools incl. civic tech</div>
+        <div class="badge">Best Innovation Award · 1st Place Division</div>
+        <div class="badge">Linux · Fedora · Docker</div>
       </div>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#projects">View my work →</a>
-        <a class="btn btn-ghost" href="resume.html">Read my résumé</a>
+        <a class="btn btn-primary" href="#projects">View my work</a>
+        <a class="btn btn-ghost" href="resume.html">Read my resume</a>
       </div>
     </div>
     <div class="profile-wrap">
@@ -358,112 +402,112 @@ footer {
 
     <div class="card reveal">
       <div class="card-head">
-        <div class="card-icon">📡</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M5 12.85a8 8 0 1 1 14 0c0 2.1-.7 3.6-1.5 4.6-.6.8-1.5 1.4-2.5 1.4h-2c-1 0-1.9-.6-2.5-1.4-.8-1-1.5-2.5-1.5-4.6Z"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">netrecon</a></h3>
       </div>
       <p>Async TCP port scanner with service fingerprinting and banner grabbing. 500 concurrent connections, 60+ service signatures, JSON/CSV export.</p>
       <div class="chips"><span class="chip">asyncio</span><span class="chip">recon</span><span class="chip">17 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.06s">
       <div class="card-head">
-        <div class="card-icon">🎣</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M18 8h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1"/><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">phishguard</a></h3>
       </div>
-      <p>Static phishing URL detector — 30+ lexical heuristics: brand spoofing, IDN homoglyphs, credential-bait keywords. Scores any URL 0–100, fully offline.</p>
+      <p>Static phishing URL detector — 30+ lexical heuristics: brand spoofing, IDN homoglyphs, credential-bait keywords. Scores any URL 0-100, fully offline.</p>
       <div class="chips"><span class="chip">heuristics</span><span class="chip">OSINT</span><span class="chip">21 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.12s">
       <div class="card-head">
-        <div class="card-icon">🔓</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">hashbreak</a></h3>
       </div>
       <p>Hash identification for 18+ formats, rule-augmented dictionary cracking with salt support, and offline password strength auditing.</p>
       <div class="chips"><span class="chip">crypto</span><span class="chip">audit</span><span class="chip">27 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal">
       <div class="card-head">
-        <div class="card-icon">📊</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">logsentinel</a></h3>
       </div>
       <p>SSH/auth log intrusion analysis: brute-force bursts, password-spray campaigns, and the alert that matters — successful logins after failed ones.</p>
       <div class="chips"><span class="chip">SIEM</span><span class="chip">blue team</span><span class="chip">16 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.06s">
       <div class="card-head">
-        <div class="card-icon">📜</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">certwatch</a></h3>
       </div>
       <p>TLS certificate watchdog: expiry countdown, self-signed detection via CA validation, weak-key flags, wildcard-aware hostname/SAN matching.</p>
       <div class="chips"><span class="chip">TLS</span><span class="chip">x509</span><span class="chip">live-tested</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.12s">
       <div class="card-head">
-        <div class="card-icon">🔎</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">redact</a></h3>
       </div>
       <p>Secret scanner with 20+ credential rules — AWS keys, GitHub tokens, PEM blocks, DB URIs — entropy-filtered, with in-place auto-redaction.</p>
       <div class="chips"><span class="chip">CI gate</span><span class="chip">regex</span><span class="chip">17 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal">
       <div class="card-head">
-        <div class="card-icon">🛡️</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">sysarmor</a></h3>
       </div>
-      <p>Linux hardening auditor: CIS-style checks on SSH config, permissions, sysctl, accounts — scores a host 0–100 with per-check remediation.</p>
+      <p>Linux hardening auditor: CIS-style checks on SSH config, permissions, sysctl, accounts — scores a host 0-100 with per-check remediation.</p>
       <div class="chips"><span class="chip">CIS</span><span class="chip">hardening</span><span class="chip">16 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.06s">
       <div class="card-head">
-        <div class="card-icon">🔍</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/><path d="M7.5 11h7"/><path d="M7.5 11 6 9.5"/><path d="m14.5 11 1.5 1.5"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">sibat</a></h3>
       </div>
-      <p>Scope-locked recon framework: passive subdomain enum (crt.sh, certspotter), CORS misconfig probe, JS secret/endpoint scanner, 95-path content discovery. A Scope Guard refuses any target outside the loaded rules of engagement — verified live against its own vulnerable lab.</p>
+      <p>Scope-locked recon framework: passive subdomain enumeration (crt.sh, certspotter), CORS misconfig probe, JavaScript secret/endpoint scanner, 95-path content discovery. A Scope Guard refuses any target outside the loaded rules of engagement — verified live against its own vulnerable lab.</p>
       <div class="chips"><span class="chip">recon</span><span class="chip">subdomains</span><span class="chip">CORS</span><span class="chip">scope guard</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.12s">
       <div class="card-head">
-        <div class="card-icon">🤖</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 7V4"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h6"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">kab0t</a></h3>
       </div>
       <p>Personal Telegram agent that speaks Taglish. BYO-key AI brain (Groq, Gemini fallback), persistent memory, and swappable skills: aral (study notes), vet (scam red-flags), deal (saved hunting criteria). Owner-locked, pure stdlib.</p>
       <div class="chips"><span class="chip">telegram</span><span class="chip">agent</span><span class="chip">BYO-key AI</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal">
       <div class="card-head">
-        <div class="card-icon">🇵🇭</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h.01"/><path d="M15 17h.01"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">UlatBayan</a></h3>
       </div>
-      <p>Barangay complaint & reporting system — full-stack civic app in one file, zero dependencies. Residents file & track reports; officials triage behind PBKDF2 auth; public transparency board shows the community what's being done.</p>
+      <p>Barangay complaint & reporting system — full-stack civic app in one file, zero dependencies. Residents file & track reports; officials triage behind PBKDF2 auth; public transparency board shows the community what is being done.</p>
       <div class="chips"><span class="chip">civic-tech</span><span class="chip">fullstack</span><span class="chip">CSRF/XSS-hardened</span><span class="chip">18 e2e tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="card reveal" style="--d:.06s">
       <div class="card-head">
-        <div class="card-icon">🌦️</div>
+        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-.9-8.9"/><path d="M6.3 10.6A6 6 0 1 1 17.5 19"/><path d="m12 12 3 2"/><path d="m15 14 3-4"/></svg></div>
         <h3><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">Weather App (Baler)</a></h3>
       </div>
       <p>Localized weather forecasting platform integrating real-time OpenWeather API streams — won <b>Best Innovation Award</b> at its competition debut.</p>
       <div class="chips"><span class="chip">HTML/CSS/JS</span><span class="chip">REST API</span><span class="chip">award-winning</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">→ repo</a></div>
+      <div class="card-links"><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">repo</a></div>
     </div>
 
   </div>
@@ -517,15 +561,15 @@ footer {
   <h2><span class="n">03.</span>Awards & Highlights</h2>
   <div class="grid">
     <div class="card reveal">
-      <div class="card-head"><div class="card-icon">🏆</div><h3>Best Innovation Award</h3></div>
+      <div class="card-head"><div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/></svg></div><h3>Best Innovation Award</h3></div>
       <p>Localized weather forecasting platform with real-time OpenWeather API integration, recognized for practical impact.</p>
     </div>
     <div class="card reveal" style="--d:.08s">
-      <div class="card-head"><div class="card-icon">🥇</div><h3>1st Place — Division Level</h3></div>
+      <div class="card-head"><div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-2 7 5.5-3 5.5 3-2-7"/></svg></div><h3>1st Place — Division Level</h3></div>
       <p>Smart AI Energy-Saving Optimization System: IoT microcontroller device with decision logic optimizing power distribution.</p>
     </div>
     <div class="card reveal" style="--d:.16s">
-      <div class="card-head"><div class="card-icon">🏫</div><h3>Classroom Software in Production</h3></div>
+      <div class="card-head"><div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div><h3>Classroom Software in Production</h3></div>
       <p>Custom educational applications developed with two high-school teachers — still used in live classroom instruction.</p>
     </div>
   </div>
@@ -585,7 +629,7 @@ footer {
     <div class="tag">wget resume.pdf</div>
     <h2>Want the full picture?</h2>
     <p>One page with everything: education timeline, detailed project bullets, leadership history, and contact information.</p>
-    <a class="btn btn-primary" href="resume.html">View résumé →</a>
+    <a class="btn btn-primary" href="resume.html">View resume</a>
   </div>
 </section>
 
@@ -600,27 +644,38 @@ footer {
 (function () {
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- typewriter intro ----
-  var line = document.getElementById('typeline');
-  var text = '~ $ whoami';
-  if (line) {
-    if (reduced) {
-      line.textContent = text;
+  // project ticker: types each repo letter-by-letter, pauses, deletes, cycles to the next
+  var repos = ['netrecon', 'phishguard', 'hashbreak', 'logsentinel', 'certwatch', 'redact', 'sysarmor', 'sibat', 'kab0t', 'ulatbayan'];
+  var prefix = 'https://github.com/Diavolo148888/';
+  var tickerEl = document.getElementById('ticker-path');
+  var tk = 0;
+  var ci = prefix.length;
+  var deleting = false;
+  function tick() {
+    if (reduced) { tickerEl.textContent = prefix + repos[0]; return; }
+    var full = prefix + repos[tk];
+    if (!deleting) {
+      ci++;
+      tickerEl.textContent = full.slice(0, ci);
+      if (ci >= full.length) { deleting = true; setTimeout(tick, 2100); return; }
+      setTimeout(tick, 34 + Math.random() * 46);
     } else {
-      var i = 0;
-      var cursor = line.querySelector('.cursor');
-      (function type() {
-        if (i <= text.length) {
-          line.textContent = text.slice(0, i);
-          line.appendChild(cursor);
-          i++;
-          setTimeout(type, 55 + Math.random() * 60);
-        }
-      })();
+      ci -= 3;
+      if (ci <= prefix.length) {
+        ci = prefix.length;
+        deleting = false;
+        tk = (tk + 1) % repos.length;
+        tickerEl.textContent = prefix + repos[tk].slice(0, 0);
+        setTimeout(tick, 420);
+        return;
+      }
+      tickerEl.textContent = full.slice(0, ci);
+      setTimeout(tick, 16);
     }
   }
+  tick();
 
-  // ---- scroll reveal ----
+  // scroll reveal
   var reveals = document.querySelectorAll('.reveal');
   if (reduced || !('IntersectionObserver' in window)) {
     reveals.forEach(function (el) { el.classList.add('revealed'); });
@@ -633,7 +688,7 @@ footer {
     reveals.forEach(function (el) { ro.observe(el); });
   }
 
-  // ---- animated counters ----
+  // animated counters
   function runCounter(el) {
     var target = parseInt(el.getAttribute('data-count'), 10) || 0;
     if (reduced || target === 0) { el.textContent = String(target); return; }
@@ -641,7 +696,7 @@ footer {
     function step(t) {
       if (!t0) t0 = t;
       var p = Math.min((t - t0) / dur, 1);
-      p = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      p = 1 - Math.pow(1 - p, 3);
       el.textContent = String(Math.round(target * p));
       if (p < 1) requestAnimationFrame(step);
     }
@@ -659,7 +714,7 @@ footer {
     nums.forEach(function (el) { co.observe(el); });
   }
 
-  // ---- nav active-state on scroll ----
+  // nav active-state on scroll
   var links = document.querySelectorAll('nav ul a[href^="#"]');
   var map = {};
   links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
@@ -678,7 +733,7 @@ footer {
     if (s) so.observe(s);
   });
 
-  // ---- card spotlight follows cursor ----
+  // card spotlight follows cursor
   if (!reduced) {
     document.querySelectorAll('.card').forEach(function (card) {
       card.addEventListener('pointermove', function (ev) {
