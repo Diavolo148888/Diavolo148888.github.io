@@ -106,12 +106,12 @@ h2 {
 
 <h2>Professional Summary</h2>
 <p style="color: var(--muted);">
-  BSIT student and hands-on IT support & cybersecurity specialist with 2+ years of real
-  systems experience: hardware/OS diagnostics, Linux administration (Fedora, CachyOS),
-  Docker infrastructure, and security auditing. Author of <b style="color: var(--text);">seven
-  open-source security tools</b> on GitHub — each fully tested, zero-dependency, and built
-  end-to-end. Award-winning builder (Best Innovation Award; 1st Place Division) with a
-  customer-service mindset sharpened by 2+ years of front-line retail operations.
+  BSIT student and IT support & cybersecurity specialist with 2+ years of hands-on
+  systems experience: hardware and OS diagnostics, Linux administration (Fedora,
+  CachyOS), Docker, and security auditing. Author of <b style="color: var(--text);">ten
+  open-source security tools</b> on GitHub, each built, tested, and documented with zero
+  external dependencies. Best Innovation Award and 1st Place Division winner, with a
+  customer-service mindset from 2+ years of front-line retail operations.
 </p>
 
 <h2>Open-Source Security Tools <span style="font-size:0.72rem; color: var(--muted); text-transform:none; letter-spacing:0;">(designed, built, tested, shipped — github.com/Diavolo148888)</span></h2>
@@ -188,6 +188,28 @@ h2 {
   </div>
   <div class="entry">
     <div class="entry-head">
+      <div class="entry-title"><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">sibat</a><span class="pill">recon · framework</span></div>
+      <div class="entry-meta">2026</div>
+    </div>
+    <ul>
+      <li>Recon framework built around a <b>Scope Guard</b>: every stage passes targets through a rules-of-engagement check, and anything out of scope is refused before a single packet is sent.</li>
+      <li>Pipeline covers passive subdomain enumeration via certificate transparency (crt.sh, certspotter), TCP port scanning, banner grabbing, <b>CORS misconfiguration probing</b>, JavaScript secret/endpoint extraction, and 95-path content discovery.</li>
+      <li>Ships with a deliberately vulnerable lab for end-to-end verification (31 findings in ~1s), plus SQLite scan history and HTML reports. Verified in a real home-network audit.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="entry-head">
+      <div class="entry-title"><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">kab0t</a><span class="pill">agent · Telegram</span></div>
+      <div class="entry-meta">2026</div>
+    </div>
+    <ul>
+      <li>Personal Telegram agent that takes commands in <b>Taglish</b> with a bring-your-own-key AI brain (Groq, Gemini fallback) and persistent memory across sessions.</li>
+      <li>Plugin skill system: <b>/aral</b> turns any link or pasted text into study notes, <b>/vet</b> flags scam patterns in marketplace listings, <b>/deal</b> stores deal-hunting criteria.</li>
+      <li>Owner-locked to one Telegram account on first contact; pure standard library, zero dependencies.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="entry-head">
       <div class="entry-title"><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">UlatBayan</a><span class="pill">civic-tech · fullstack</span></div>
       <div class="entry-meta">2026</div>
     </div>
@@ -200,26 +222,6 @@ h2 {
   </div>
 </div>
 
-  <div class="entry">
-    <div class="entry-head">
-      <div class="entry-title"><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">sibat</a><span class="pill">Python · recon</span></div>
-      <div class="entry-meta">2026</div>
-    </div>
-    <ul>
-      <li>Scope-locked recon framework with passive subdomain enumeration (crt.sh/certspotter), CORS misconfiguration detector, JavaScript secret/endpoint scanner, and bounty-grade wordlist; zero-dependency, HTML reports, SQLite history.</li>
-      <li>Built-in vulnerable lab for end-to-end testing; Scope Guard enforces rules of engagement on every packet.</li>
-    </ul>
-  </div>
-  <div class="entry">
-    <div class="entry-head">
-      <div class="entry-title"><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">kab0t</a><span class="pill">Python · Telegram</span></div>
-      <div class="entry-meta">2026</div>
-    </div>
-    <ul>
-      <li>Taglish Telegram agent with AI brain (Groq/Gemini fallback), memory, and skills: aral (study notes), vet (scam red-flags), deal (saved criteria). Owner-locked, stdlib-only.</li>
-      <li>Verified in REPL and live tests; skills persist across sessions.</li>
-    </ul>
-  </div>
 <h2>Technical Experience</h2>
 <div class="entry">
   <div class="entry-head">
@@ -292,7 +294,7 @@ h2 {
 <div class="skills-grid">
   <div class="skill-box">
     <h3>Security</h3>
-    <p>Network recon (Nmap), log analysis, vulnerability scanning, malware analysis, security code review, phishing detection</p>
+    <p>Network recon (Nmap), log analysis, vulnerability scanning, security automation, security code review, phishing detection</p>
   </div>
   <div class="skill-box">
     <h3>Systems & Linux</h3>
@@ -300,4 +302,18 @@ h2 {
   </div>
   <div class="skill-box">
     <h3>Development</h3>
-    <p>Python, C/C++, HTML/CSS/JS, SQL, REST APIs, Git/GitHub, VS Code, Arduino</p>
+    <p>Python, C/C++, HTML/CSS/JS, SQL, REST APIs, Git/GitHub, Telegram Bot API, VS Code, Arduino</p>
+  </div>
+  <div class="skill-box">
+    <h3>IT Support & Soft Skills</h3>
+    <p>Hardware diagnostics, OS install/repair, technical documentation, customer service, training, English (professional) · Filipino (native)</p>
+  </div>
+</div>
+
+<div class="print-note">
+  💡 To save as PDF: press <kbd>Ctrl</kbd>+<kbd>P</kbd> → destination "Save as PDF". This page is print-optimized — it will switch to a clean light theme automatically.
+</div>
+
+</div>
+</body>
+</html>
