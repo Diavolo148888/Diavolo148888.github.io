@@ -3,511 +3,589 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>John Mark Alojado — IT Support & Cybersecurity</title>
-<meta name="description" content="Portfolio of John Mark Alojado — BSIT student, IT support and cybersecurity specialist. 10 open-source security tools, systems work, and awarded engineering projects.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%2322d3ee' d='M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z'/></svg>">
+<title>John Mark Alojado — Security Engineering & IT Operations</title>
+<meta name="description" content="Portfolio of John Mark Alojado — security tooling engineer and IT operations specialist. 12 open-source repos: attack frameworks, SIEM, ML classifiers, agents.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23050a12'/><path d='M16 5 8 8v6c0 5.5 3.4 9.7 8 11 4.6-1.3 8-5.5 8-11V8l-8-3Z' fill='none' stroke='%2300e5a0' stroke-width='2'/></svg>">
 <style>
+/* ============ DESIGN TOKENS ============ */
 :root {
-  --bg: #0a0e14;
-  --bg2: #0f141c;
-  --card: #131a24;
-  --border: #1e2836;
-  --text: #d6e2f0;
-  --muted: #8494ac;
-  --accent: #22d3ee;
-  --accent2: #a78bfa;
-  --green: #34d399;
+  --bg: #050a12;
+  --bg-raised: #081020;
+  --bg-card: #0a1424;
+  --line: #14243c;
+  --line-bright: #1e3454;
+  --text: #dbe7f5;
+  --text-dim: #6c83a3;
+  --text-faint: #43566f;
+  --accent: #00e5a0;      /* terminal green-mint */
+  --accent-2: #4da3ff;    /* intel blue */
+  --accent-3: #ffb454;    /* warning amber */
+  --danger: #ff5d73;
+  --mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, Menlo, monospace;
+  --sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
+  font-family: var(--sans);
+  line-height: 1.65;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
+::selection { background: rgba(0, 229, 160, 0.25); }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ---------- svg icons ---------- */
-.icn { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+/* ============ BACKGROUND FIELD ============ */
+.field {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(900px 500px at 80% -10%, rgba(0, 229, 160, 0.05), transparent 60%),
+    radial-gradient(700px 500px at 0% 100%, rgba(77, 163, 255, 0.05), transparent 60%);
+}
+.field canvas { position: absolute; inset: 0; }
+.gridlines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(77, 163, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77, 163, 255, 0.028) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, #000 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, #000 20%, transparent 80%);
+}
 
-/* ---------- nav ---------- */
+/* ============ NAV ============ */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(10, 14, 20, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 clamp(1rem, 5vw, 3rem);
+  background: rgba(5, 10, 18, 0.78);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  height: 58px;
   display: flex; align-items: center; justify-content: space-between;
-  height: 60px;
-  transform: translateY(-100%);
-  animation: navIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  padding: 0 clamp(1rem, 4vw, 2.6rem);
+  opacity: 0; transform: translateY(-8px);
+  animation: navIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
 }
-@keyframes navIn { to { transform: translateY(0); } }
-.nav-logo { font-weight: 700; color: var(--text); font-size: 1.05rem; letter-spacing: 0.02em; }
-.nav-logo span { color: var(--accent); }
-nav ul { display: flex; gap: clamp(0.8rem, 2vw, 2rem); list-style: none; }
-nav ul a { color: var(--muted); font-size: 0.92rem; font-weight: 500; position: relative; padding: 0.2rem 0; }
-nav ul a:hover { color: var(--text); text-decoration: none; }
+@keyframes navIn { to { opacity: 1; transform: translateY(0); } }
+.logo { font-family: var(--mono); font-size: 0.92rem; font-weight: 700; letter-spacing: 0.02em; }
+.logo .dot { color: var(--accent); }
+.logo .sub { color: var(--text-faint); font-weight: 400; margin-left: 10px; font-size: 0.72rem; letter-spacing: 0.14em; }
+nav ul { display: flex; gap: clamp(0.7rem, 2vw, 1.7rem); list-style: none; }
+nav ul a {
+  color: var(--text-dim); font-size: 0.86rem; font-weight: 500;
+  font-family: var(--mono); padding: 4px 2px; position: relative;
+}
 nav ul a::after {
-  content: ""; position: absolute; left: 0; bottom: -2px;
-  width: 100%; height: 2px; background: var(--accent);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  content: ""; position: absolute; left: 0; bottom: -1px; width: 100%; height: 1.5px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+nav ul a:hover, nav ul a.active { color: var(--text); text-decoration: none; }
 nav ul a:hover::after, nav ul a.active::after { transform: scaleX(1); }
 nav ul a.active { color: var(--accent); }
+.status-pill {
+  font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.16em;
+  color: var(--accent); border: 1px solid rgba(0, 229, 160, 0.35);
+  padding: 3px 10px; border-radius: 999px; display: flex; align-items: center; gap: 6px;
+}
+.status-pill i {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-/* ---------- layout ---------- */
-section { max-width: 1080px; margin: 0 auto; padding: clamp(3rem, 8vw, 5.5rem) 1.5rem; }
-.tag { color: var(--accent); font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.82rem; }
-h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin: 0.4rem 0 1.4rem; }
-h2 .n { color: var(--muted); font-family: monospace; margin-right: 0.6rem; }
+/* ============ LAYOUT ============ */
+main { position: relative; z-index: 1; }
+section { max-width: 1120px; margin: 0 auto; padding: clamp(3.4rem, 9vw, 6.5rem) 1.5rem; }
+.kicker {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.24em;
+  color: var(--accent); display: flex; align-items: center; gap: 10px;
+}
+.kicker::before { content: ""; width: 26px; height: 1px; background: var(--accent); opacity: 0.6; }
+h2 { font-size: clamp(1.55rem, 3.4vw, 2.15rem); margin: 0.55rem 0 1rem; font-weight: 700; letter-spacing: -0.01em; }
+.lede { color: var(--text-dim); max-width: 640px; font-size: 0.98rem; margin-bottom: 2rem; }
 
-/* ---------- reveal base + per-section variants ---------- */
-.reveal { opacity: 0; transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: var(--d, 0s); }
-.reveal.revealed { opacity: 1; }
+/* ============ REVEAL BASE ============ */
+.rv { opacity: 0; transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--d, 0s); will-change: opacity, transform; }
+.rv.in { opacity: 1; }
 
-/* stats + resume CTA rise from below */
-#stats .reveal, #resume .reveal { transform: translateY(28px); }
-#stats .reveal.revealed, #resume .reveal.revealed { transform: translateY(0); }
-
-/* projects flip up like terminal boot */
-#projects .card.reveal { transform: perspective(900px) rotateX(7deg) translateY(30px); transform-origin: top center; }
-#projects .card.reveal.revealed { transform: perspective(900px) rotateX(0) translateY(0); }
-
-/* awards swing in from the left */
-#awards .card.reveal { transform: perspective(900px) rotateY(-14deg) translateX(-26px); transform-origin: left center; }
-#awards .card.reveal.revealed { transform: perspective(900px) rotateY(0) translateX(0); }
-
-/* skills scale in */
-#skills .skill-cat.reveal { transform: translateY(30px) scale(0.96); }
-#skills .skill-cat.reveal.revealed { transform: translateY(0) scale(1); }
-
-/* ---------- hero ---------- */
-#hero {
-  min-height: 92vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding-top: 7rem;
-  position: relative;
+/* ============ HERO ============ */
+#hero { min-height: 100vh; display: flex; align-items: center; padding-top: 5rem; }
+.hero-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; width: 100%; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em;
+  color: var(--text-dim); border: 1px solid var(--line-bright);
+  padding: 5px 12px; border-radius: 999px; margin-bottom: 1.4rem;
+  background: var(--bg-raised);
 }
-#hero::before {
-  content: "";
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(600px 400px at 85% 15%, rgba(34, 211, 238, 0.07), transparent 70%),
-    radial-gradient(700px 500px at 10% 85%, rgba(167, 139, 250, 0.07), transparent 70%);
-  pointer-events: none;
-  animation: glowDrift 14s ease-in-out infinite alternate;
+.hero-badge b { color: var(--accent); font-weight: 600; }
+h1 {
+  font-size: clamp(2.3rem, 5.6vw, 3.9rem); font-weight: 800; line-height: 1.07;
+  letter-spacing: -0.025em; margin-bottom: 0.4rem;
 }
-@keyframes glowDrift {
-  from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(-30px, 20px) scale(1.06); }
+h1 .thin { color: var(--text-dim); font-weight: 300; }
+.roles {
+  font-family: var(--mono); font-size: clamp(0.86rem, 1.6vw, 1.02rem);
+  color: var(--text-dim); min-height: 1.6em; margin: 0.9rem 0 1.3rem;
 }
-#hero .grid-bg {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 75%);
+.roles .fixed { color: var(--text); }
+.roles .typed { color: var(--accent); }
+.roles .caret {
+  display: inline-block; width: 0.5em; height: 1.05em; background: var(--accent);
+  vertical-align: text-bottom; margin-left: 2px;
+  animation: caretBlink 1.05s steps(1) infinite;
 }
-.hero-row { display: flex; align-items: center; gap: clamp(1.6rem, 4vw, 3rem); }
-.hero-title { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.1; margin: 1rem 0; }
-.hero-title .grad {
-  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-  background-size: 200% auto;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradFlow 6s linear infinite;
-}
-@keyframes gradFlow { to { background-position: 200% center; } }
-.hero-sub { color: var(--muted); font-size: clamp(1rem, 2vw, 1.2rem); max-width: 640px; }
-
-/* project ticker: sendthesong-style letter animation cycling the repos */
-.ticker {
-  margin-top: 1.4rem;
-  font-family: 'Cascadia Code', 'Fira Code', monospace;
-  font-size: 0.95rem;
-  color: var(--green);
-  min-height: 1.5em;
-  display: flex; align-items: center; gap: 0.4em;
-}
-.ticker .lbl { color: var(--muted); font-size: 0.8rem; }
-.ticker .git-path { white-space: nowrap; overflow: hidden; }
-.ticker .cursor {
-  display: inline-block; width: 0.55em; height: 1.05em;
-  background: var(--green); flex-shrink: 0;
-  animation: blink 1s steps(1) infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
-/* profile photo with rotating ring */
-.profile-wrap { position: relative; width: 190px; height: 190px; flex-shrink: 0; }
-.profile-ring {
-  position: absolute; inset: -6px; border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent));
-  animation: ringSpin 5s linear infinite;
-}
-.profile-ring::after {
-  content: ""; position: absolute; inset: 4px; border-radius: 50%;
-  background: var(--bg);
-}
-.profile-img {
-  position: relative; z-index: 1;
-  width: 190px; height: 190px; border-radius: 50%;
-  object-fit: cover; object-position: center 22%;
-  display: block;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s;
-  border: 3px solid var(--bg);
-}
-.profile-wrap:hover .profile-img {
-  transform: scale(1.05);
-  box-shadow: 0 0 34px rgba(34, 211, 238, 0.35);
-}
-@keyframes ringSpin { to { transform: rotate(360deg); } }
-
-.hero-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.6rem; }
-.badge {
-  background: var(--card); border: 1px solid var(--border);
-  color: var(--muted); padding: 0.35rem 0.85rem; border-radius: 999px;
-  font-size: 0.82rem;
-  opacity: 0; transform: translateY(12px);
-  animation: badgeIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-.badge:nth-child(1) { animation-delay: 0.9s; }
-.badge:nth-child(2) { animation-delay: 1.05s; }
-.badge:nth-child(3) { animation-delay: 1.2s; }
-.badge:nth-child(4) { animation-delay: 1.35s; }
-@keyframes badgeIn { to { opacity: 1; transform: translateY(0); } }
-.badge b { color: var(--text); font-weight: 600; }
-.hero-cta { display: flex; gap: 1rem; margin-top: 2.2rem; flex-wrap: wrap; }
+@keyframes caretBlink { 50% { opacity: 0; } }
+.hero-sub { color: var(--text-dim); max-width: 560px; font-size: 0.97rem; margin-bottom: 2rem; }
+.hero-sub b { color: var(--text); font-weight: 600; }
+.hero-cta { display: flex; gap: 0.9rem; flex-wrap: wrap; }
 .btn {
-  display: inline-block; padding: 0.75rem 1.6rem; border-radius: 10px;
-  font-weight: 600; font-size: 0.95rem;
-  transition: transform 0.15s, box-shadow 0.15s, background-position 0.4s;
+  font-family: var(--mono); font-size: 0.86rem; font-weight: 600;
+  padding: 0.8rem 1.5rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s, border-color 0.18s, background 0.18s;
+  border: 1px solid transparent;
 }
 .btn:hover { transform: translateY(-2px); text-decoration: none; }
-.btn-primary {
-  background-image: linear-gradient(90deg, #0891b2, #7c3aed, #0891b2);
-  background-size: 200% auto;
-  color: #fff; box-shadow: 0 4px 24px rgba(34, 211, 238, 0.25);
-}
-.btn-primary:hover { background-position: right center; }
-.btn-ghost { border: 1px solid var(--border); color: var(--text); background: var(--card); }
-.btn-ghost:hover { border-color: var(--accent); }
+.btn-solid { background: var(--accent); color: #04120c; box-shadow: 0 4px 26px rgba(0, 229, 160, 0.3); }
+.btn-solid:hover { box-shadow: 0 8px 34px rgba(0, 229, 160, 0.42); }
+.btn-line { border-color: var(--line-bright); color: var(--text); background: rgba(10, 20, 36, 0.6); }
+.btn-line:hover { border-color: var(--accent); color: var(--accent); }
 
-/* ---------- stats: decrypt-style counters + scanline hover ---------- */
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
-.stat {
-  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-  padding: 1.2rem; text-align: center;
-  transition: border-color 0.25s, transform 0.25s;
-  position: relative; overflow: hidden;
+/* profile panel */
+.profile-panel { position: relative; display: flex; justify-content: center; }
+.pframe { position: relative; width: 300px; height: 300px; max-width: 70vw; }
+.pframe img {
+  position: relative; z-index: 2; width: 100%; height: 100%;
+  border-radius: 18px; object-fit: cover; object-position: center 20%;
+  border: 1px solid var(--line-bright);
+  filter: saturate(0.92) contrast(1.03);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s;
 }
-.stat:hover { border-color: var(--accent); transform: translateY(-4px); }
-.stat .num { font-size: 1.9rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
-.stat .lbl { color: var(--muted); font-size: 0.85rem; }
-.stat::after {
-  content: ""; position: absolute; inset: 0; border-radius: 14px;
-  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(34, 211, 238, 0.05) 2px 3px);
-  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+.pframe:hover img { transform: scale(1.025); filter: saturate(1) contrast(1.05); }
+.pframe .ring {
+  position: absolute; inset: -14px; z-index: 1; border-radius: 22px;
+  background: conic-gradient(from var(--a, 0deg), transparent 0 78%, var(--accent) 88%, var(--accent-2) 96%, transparent 100%);
+  animation: orbit 5.5s linear infinite;
+  opacity: 0.9;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  padding: 1.5px;
 }
-.stat:hover::after { opacity: 1; }
+@property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes orbit { to { --a: 360deg; } }
+.pframe .corner { position: absolute; width: 22px; height: 22px; z-index: 3; border-color: var(--accent); border-style: solid; opacity: 0.85; }
+.pframe .c1 { top: -8px; left: -8px; border-width: 2px 0 0 2px; }
+.pframe .c2 { top: -8px; right: -8px; border-width: 2px 2px 0 0; }
+.pframe .c3 { bottom: -8px; left: -8px; border-width: 0 0 2px 2px; }
+.pframe .c4 { bottom: -8px; right: -8px; border-width: 0 2px 2px 0; }
+.ptag {
+  position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); z-index: 3;
+  font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em;
+  color: var(--text-dim); background: var(--bg-raised); border: 1px solid var(--line-bright);
+  padding: 5px 14px; border-radius: 999px; white-space: nowrap;
+}
 
-/* ---------- project cards ---------- */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.2rem; }
-.card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-  padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;
-  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-  position: relative; overflow: hidden;
+/* ============ MARQUEE ============ */
+.marquee {
+  border-block: 1px solid var(--line); padding: 14px 0; overflow: hidden;
+  background: var(--bg-raised); position: relative; z-index: 1;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.card::before {
-  content: ""; position: absolute; inset: 0;
-  background: radial-gradient(420px 200px at var(--mx, 50%) var(--my, 0%), rgba(34, 211, 238, 0.06), transparent 70%);
-  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+.mtrack { display: flex; gap: 3rem; width: max-content; animation: scroll 30s linear infinite; }
+.marquee:hover .mtrack { animation-play-state: paused; }
+@keyframes scroll { to { transform: translateX(-50%); } }
+.mitem {
+  font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim);
+  display: flex; align-items: center; gap: 3rem; white-space: nowrap;
 }
-.card:hover { border-color: #2e3d52; transform: translateY(-4px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35); }
-.card:hover::before { opacity: 1; }
-.card-head { display: flex; align-items: center; gap: 0.8rem; }
-.card-icon {
-  width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(34, 211, 238, 0.08);
-  border: 1px solid rgba(34, 211, 238, 0.15);
-  transition: transform 0.25s;
-}
-.card:hover .card-icon { transform: rotate(-6deg) scale(1.08); }
-.card h3 { font-size: 1.08rem; font-weight: 700; }
-.card h3 a { color: var(--text); }
-.card h3 a:hover { color: var(--accent); text-decoration: none; }
-.card p { color: var(--muted); font-size: 0.9rem; flex-grow: 1; }
-.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.chip {
-  font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 999px;
-  background: var(--bg2); border: 1px solid var(--border); color: var(--accent);
-  font-family: 'Cascadia Code', monospace;
-}
-.card-links { display: flex; gap: 1rem; margin-top: auto; padding-top: 0.4rem; }
-.card-links a { font-size: 0.82rem; font-weight: 600; }
+.mitem b { color: var(--text); font-weight: 500; }
+.mitem i { color: var(--accent); font-style: normal; }
 
-/* ---------- experience: timeline with radar ping ---------- */
-.timeline { position: relative; padding-left: 1.6rem; border-left: 2px solid var(--border); }
-.titem { margin-bottom: 2rem; position: relative; opacity: 0; transform: translateX(-24px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-.titem.revealed { opacity: 1; transform: translateX(0); }
-.titem::before {
-  content: ""; position: absolute; left: -1.75rem; top: 0.35rem;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--bg); border: 2px solid var(--accent);
+/* ============ STATS ============ */
+.stats-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.stat { background: var(--bg-raised); padding: 1.5rem 1.2rem; position: relative; overflow: hidden; }
+.stat:hover { background: var(--bg-card); }
+.stat .num { font-family: var(--mono); font-size: 2.1rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.stat .lbl { color: var(--text-dim); font-size: 0.78rem; margin-top: 2px; font-family: var(--mono); letter-spacing: 0.06em; }
+.stat .spark { position: absolute; right: 10px; top: 12px; opacity: 0.5; }
+
+/* ============ PROJECTS ============ */
+.filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+.chipbtn {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  color: var(--text-dim); border: 1px solid var(--line); background: transparent;
+  padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  transition: all 0.2s;
+}
+.chipbtn:hover { border-color: var(--line-bright); color: var(--text); }
+.chipbtn.on { color: var(--accent); border-color: var(--accent); background: rgba(0, 229, 160, 0.07); }
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 1.1rem; }
+.pcard {
+  background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1.35rem 1.4rem; position: relative; overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.25s;
+  display: flex; flex-direction: column; gap: 0.7rem;
+}
+.pcard::before {
+  content: ""; position: absolute; inset: 0; border-radius: 12px; pointer-events: none;
+  background: radial-gradient(500px 240px at var(--mx, 50%) var(--my, -20%), rgba(0, 229, 160, 0.07), transparent 65%);
+  opacity: 0; transition: opacity 0.35s;
+}
+.pcard:hover { transform: translateY(-4px); border-color: var(--line-bright); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.42); }
+.pcard:hover::before { opacity: 1; }
+.pcard.hidden { display: none; }
+.pcard-top { display: flex; align-items: center; justify-content: space-between; }
+.pcard-ic {
+  width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 229, 160, 0.07); border: 1px solid rgba(0, 229, 160, 0.16);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pcard:hover .pcard-ic { transform: rotate(-5deg) scale(1.06); }
+.pcard-ic svg { width: 21px; height: 21px; stroke: var(--accent); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.pcard-cat { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; color: var(--text-faint); }
+.pcard h3 { font-size: 1.06rem; font-weight: 700; letter-spacing: -0.01em; }
+.pcard h3 a { color: var(--text); }
+.pcard h3 a:hover { color: var(--accent); text-decoration: none; }
+.pcard p { color: var(--text-dim); font-size: 0.87rem; flex-grow: 1; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.04em; padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); border: 1px solid var(--line); color: var(--text-dim); }
+.tag.hot { color: var(--accent); border-color: rgba(0, 229, 160, 0.3); }
+.plinks { display: flex; gap: 1rem; margin-top: auto; padding-top: 0.3rem; }
+.plinks a { font-family: var(--mono); font-size: 0.76rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+.plinks a:hover { text-decoration: none; filter: brightness(1.25); }
+
+/* ============ TIMELINE ============ */
+.tl { position: relative; margin-left: 6px; }
+.tl::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: linear-gradient(180deg, var(--accent), var(--line-bright)); opacity: 0.5; }
+.ev { position: relative; padding: 0 0 2.2rem 2rem; }
+.ev::before {
+  content: ""; position: absolute; left: -5.5px; top: 6px; width: 11px; height: 11px;
+  border-radius: 50%; background: var(--bg); border: 2px solid var(--accent);
   transition: background 0.3s, box-shadow 0.3s;
 }
-.titem:hover::before { background: var(--accent); box-shadow: 0 0 12px rgba(34, 211, 238, 0.5); }
-.titem::after {
-  content: ""; position: absolute; left: -1.75rem; top: 0.35rem;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--accent); opacity: 0;
-}
-.titem.revealed::after { animation: ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite; }
-@keyframes ping {
-  0% { opacity: 0.7; transform: scale(1); }
-  70%, 100% { opacity: 0; transform: scale(2.6); }
-}
-.titem .when { color: var(--accent); font-family: monospace; font-size: 0.8rem; }
-.titem h3 { font-size: 1.05rem; margin: 0.2rem 0; }
-.titem .org { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
-.titem ul { color: var(--muted); font-size: 0.9rem; padding-left: 1.2rem; }
-.titem ul li { margin-bottom: 0.35rem; }
+.ev:hover::before { background: var(--accent); box-shadow: 0 0 14px rgba(0, 229, 160, 0.6); }
+.ev .when { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em; color: var(--accent); }
+.ev h3 { font-size: 1.04rem; margin: 0.25rem 0 0.1rem; }
+.ev .org { color: var(--text-dim); font-size: 0.86rem; margin-bottom: 0.5rem; }
+.ev ul { color: var(--text-dim); font-size: 0.89rem; padding-left: 1.1rem; }
+.ev ul li { margin-bottom: 0.32rem; }
+.ev ul li b { color: var(--text); font-weight: 600; }
 
-/* ---------- skills ---------- */
-.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-.skill-cat {
-  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-  padding: 1.2rem;
-  transition: border-color 0.25s;
+/* ============ SKILLS ============ */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+.scat { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem; transition: border-color 0.25s, transform 0.25s; }
+.scat:hover { border-color: var(--line-bright); transform: translateY(-3px); }
+.scat h3 { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 0.9rem; }
+.scat ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.scat li {
+  font-family: var(--mono); font-size: 0.74rem; color: var(--text);
+  background: var(--bg-raised); border: 1px solid var(--line);
+  padding: 4px 11px; border-radius: 7px;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
 }
-.skill-cat:hover { border-color: #2e3d52; }
-.skill-cat h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 0.6rem; }
-.skill-cat ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.skill-cat li {
-  background: var(--bg2); border: 1px solid var(--border);
-  padding: 0.25rem 0.7rem; border-radius: 8px; font-size: 0.82rem; color: var(--text);
-  transition: border-color 0.2s, transform 0.2s;
-}
-.skill-cat li:hover { border-color: var(--accent); transform: translateY(-2px); }
+.scat li:hover { border-color: var(--accent); transform: translateY(-2px); }
 
-/* ---------- resume CTA ---------- */
-.resume-box {
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.06), rgba(167, 139, 250, 0.06));
-  border: 1px solid var(--border); border-radius: 18px;
-  padding: clamp(1.6rem, 4vw, 2.6rem); text-align: center;
+/* ============ RESUME CTA ============ */
+.cta-box {
+  border: 1px solid var(--line); border-radius: 16px; text-align: center;
+  padding: clamp(2rem, 5vw, 3.2rem); position: relative; overflow: hidden;
+  background:
+    radial-gradient(600px 200px at 50% 0%, rgba(0, 229, 160, 0.07), transparent 70%),
+    var(--bg-raised);
 }
-.resume-box h2 { margin-top: 0; }
-.resume-box p { color: var(--muted); max-width: 560px; margin: 0 auto 1.6rem; }
+.cta-box h2 { margin-top: 0.4rem; }
+.cta-box p { color: var(--text-dim); max-width: 540px; margin: 0 auto 1.8rem; font-size: 0.94rem; }
 
-/* ---------- footer ---------- */
+/* ============ FOOTER ============ */
 footer {
-  border-top: 1px solid var(--border); color: var(--muted);
-  text-align: center; padding: 2.2rem 1rem; font-size: 0.85rem;
+  border-top: 1px solid var(--line); color: var(--text-faint);
+  text-align: center; padding: 2.4rem 1rem; font-size: 0.8rem; font-family: var(--mono);
+  position: relative; z-index: 1;
 }
+footer .fline { display: flex; justify-content: center; gap: 1.6rem; flex-wrap: wrap; margin-top: 0.5rem; }
+footer a { color: var(--text-dim); }
+footer a:hover { color: var(--accent); }
 
-@media (max-width: 640px) {
-  nav ul { gap: 0.9rem; }
-  nav ul a { font-size: 0.8rem; }
-  .hero-row { flex-direction: column-reverse; text-align: center; }
-  .hero-sub { margin: 0 auto; }
-  .hero-badges, .hero-cta { justify-content: center; }
-  .ticker { justify-content: center; }
-  .profile-wrap, .profile-img { width: 150px; height: 150px; }
+/* ============ SECTION-SPECIFIC REVEALS ============ */
+#projects .pcard.rv { transform: translateY(26px); }
+#projects .pcard.rv.in { transform: translateY(0); }
+#experience .ev.rv { transform: translateX(-22px); }
+#experience .ev.rv.in { transform: translateX(0); }
+#skills .scat.rv { transform: translateY(24px) scale(0.98); }
+#skills .scat.rv.in { transform: translateY(0) scale(1); }
+#numbers .stat.rv { transform: translateY(20px); }
+#numbers .stat.rv.in { transform: translateY(0); }
+#resume .rv { transform: translateY(26px); }
+#resume .rv.in { transform: translateY(0); }
+
+@media (max-width: 880px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .profile-panel { order: -1; }
+  .pframe { width: 220px; height: 220px; }
+  .stats-band { grid-template-columns: repeat(2, 1fr); }
 }
-
+@media (max-width: 620px) {
+  nav ul { display: none; }
+  .stats-band { grid-template-columns: repeat(2, 1fr); }
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal, .titem, #projects .card.reveal, #awards .card.reveal, #skills .skill-cat.reveal { opacity: 1; transform: none; }
-  .badge { opacity: 1; transform: none; }
-  nav { transform: translateY(0); }
+  .rv { opacity: 1; transform: none; }
+  nav { opacity: 1; transform: none; }
 }
 </style>
 </head>
 <body>
 
+<div class="field">
+  <canvas id="net"></canvas>
+  <div class="gridlines"></div>
+</div>
+
 <nav>
-  <div class="nav-logo">johnmark<span>.dev</span></div>
+  <div class="logo">jmalojado<span class="dot">.sh</span><span class="sub">SEC + OPS</span></div>
   <ul>
-    <li><a href="#projects">Projects</a></li>
+    <li><a href="#work">Work</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="resume.html">Resume</a></li>
     <li><a href="https://github.com/Diavolo148888" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
+  <div class="status-pill"><i></i>OPEN TO WORK</div>
 </nav>
+
+<main>
 
 <!-- ================= HERO ================= -->
 <section id="hero">
-  <div class="grid-bg"></div>
-  <div class="tag">~ $ whoami</div>
-  <h1 class="hero-title">John Mark <span class="grad">Alojado</span></h1>
-  <div class="hero-row">
+  <div class="hero-grid">
     <div>
-      <p class="hero-sub">
-        BSIT student and hands-on IT support & cybersecurity specialist from Baler, Aurora, Philippines.
-        I build security tooling people actually use — port scanners, phishing detectors,
-        log analyzers — and keep the systems around me running.
+      <div class="hero-badge rv in"><b>12</b> REPOS SHIPPED · <b>9</b> TEST SUITES · ZERO-DEP ENGINEERING</div>
+      <h1 class="rv in" style="--d:.08s">John Mark <span class="thin">Alojado</span></h1>
+      <div class="roles rv in" style="--d:.16s"><span class="fixed">$ whoami — </span><span class="typed" id="typed"></span><span class="caret"></span></div>
+      <p class="hero-sub rv in" style="--d:.24s">
+        Security tooling engineer and IT operations specialist from Baler, Aurora.
+        I build the software defenders use — <b>an attack framework, a honeypot-driven SIEM,
+        from-scratch ML detectors</b> — and keep real systems running. Every repo ships with
+        a test suite and zero external dependencies.
       </p>
-      <div class="ticker">
-        <span class="lbl">git clone</span>
-        <span class="git-path" id="ticker-path">https://github.com/Diavolo148888/netrecon</span>
-        <span class="cursor"></span>
-      </div>
-      <div class="hero-badges">
-        <div class="badge">BSIT @ <b>Central Luzon State University</b></div>
-        <div class="badge"><b>10</b> open-source tools incl. civic tech</div>
-        <div class="badge">Best Innovation Award · 1st Place Division</div>
-        <div class="badge">Linux · Fedora · Docker</div>
-      </div>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="#projects">View my work</a>
-        <a class="btn btn-ghost" href="resume.html">Read my resume</a>
+      <div class="hero-cta rv in" style="--d:.32s">
+        <a class="btn btn-solid" href="#work">View the arsenal</a>
+        <a class="btn btn-line" href="resume.html">Read the resume</a>
       </div>
     </div>
-    <div class="profile-wrap">
-      <div class="profile-ring"></div>
-      <img src="assets/profile.jpg" alt="John Mark Alojado" class="profile-img">
+    <div class="profile-panel rv in" style="--d:.2s">
+      <div class="pframe">
+        <div class="ring"></div>
+        <img src="assets/profile.jpg" alt="John Mark Alojado">
+        <div class="corner c1"></div><div class="corner c2"></div>
+        <div class="corner c3"></div><div class="corner c4"></div>
+        <div class="ptag">SECURITY · OPS · ML</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ================= STATS ================= -->
-<section id="stats">
-  <div class="stats">
-    <div class="stat reveal"><div class="num" data-count="10">0</div><div class="lbl">open-source tools shipped</div></div>
-    <div class="stat reveal" style="--d:.08s"><div class="num" data-count="137">0</div><div class="lbl">tests passing across repos</div></div>
-    <div class="stat reveal" style="--d:.16s"><div class="num" data-count="0">0</div><div class="lbl">external dependencies</div></div>
-    <div class="stat reveal" style="--d:.24s"><div class="num" data-count="2">0</div><div class="lbl">competition awards</div></div>
+<!-- ================= MARQUEE ================= -->
+<div class="marquee">
+  <div class="mtrack" id="mtrack">
+    <span class="mitem"><b>sibat</b> <i>scope-locked recon framework</i></span>
+    <span class="mitem"><b>tanggol</b> <i>honeypot + 3D SIEM</i></span>
+    <span class="mitem"><b>kab0t</b> <i>Taglish Telegram agent</i></span>
+    <span class="mitem"><b>bantay</b> <i>family scam defense</i></span>
+    <span class="mitem"><b>ml-detector</b> <i>Naive Bayes from scratch</i></span>
+    <span class="mitem"><b>hacker-arcade</b> <i>CRT security games</i></span>
+    <span class="mitem"><b>ulatbayan</b> <i>civic reporting system</i></span>
+    <span class="mitem"><b>sysarmor</b> <i>CIS hardening audits</i></span>
+  </div>
+</div>
+
+<!-- ================= NUMBERS ================= -->
+<section id="numbers">
+  <div class="stats-band">
+    <div class="stat rv"><div class="num" data-count="12">0</div><div class="lbl">open-source repos</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 12 7 8 13 10 19 4 25 2" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
+    <div class="stat rv" style="--d:.07s"><div class="num" data-count="9">0</div><div class="lbl">test suites shipped</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 11 7 11 13 7 19 8 25 3" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
+    <div class="stat rv" style="--d:.14s"><div class="num" data-count="0">0</div><div class="lbl">external dependencies</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 7h24" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
+    <div class="stat rv" style="--d:.21s"><div class="num" data-count="2">0</div><div class="lbl">competition awards</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 12 7 4 13 8 19 2 25 6" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
   </div>
 </section>
 
 <!-- ================= PROJECTS ================= -->
-<section id="projects">
-  <div class="tag">~/portfolio</div>
-  <h2><span class="n">01.</span>Security Tooling</h2>
-  <p style="color: var(--muted); max-width: 640px; margin-bottom: 1.8rem;">
-    A coherent toolkit I designed, built, and tested end-to-end — each repo is a
-    working, zero-dependency Python security tool with a real test suite.
+<section id="work">
+  <div class="kicker">01 — THE ARSENAL</div>
+  <h2>Security engineering, shipped as open source</h2>
+  <p class="lede">
+    A coherent toolkit designed, built, and tested end-to-end. Each repo is a working
+    zero-dependency tool with a real test suite — filter by what you want to see.
   </p>
-  <div class="grid">
+  <div class="filters">
+    <button class="chipbtn on" data-f="all">ALL</button>
+    <button class="chipbtn" data-f="offsec">OFFENSIVE</button>
+    <button class="chipbtn" data-f="blue">DEFENSIVE</button>
+    <button class="chipbtn" data-f="ml">MACHINE LEARNING</button>
+    <button class="chipbtn" data-f="agents">AGENTS</button>
+    <button class="chipbtn" data-f="web">WEB / GAMES</button>
+  </div>
 
-    <div class="card reveal">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M5 12.85a8 8 0 1 1 14 0c0 2.1-.7 3.6-1.5 4.6-.6.8-1.5 1.4-2.5 1.4h-2c-1 0-1.9-.6-2.5-1.4-.8-1-1.5-2.5-1.5-4.6Z"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">netrecon</a></h3>
+  <div class="pgrid" id="pgrid">
+
+    <div class="pcard rv" data-cat="offsec">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/><path d="M7.5 11h7"/><path d="M7.5 11 6 9.5"/><path d="m14.5 11 1.5 1.5"/></svg></div>
+        <div class="pcard-cat">OFFENSIVE / RECON</div>
       </div>
-      <p>Async TCP port scanner with service fingerprinting and banner grabbing. 500 concurrent connections, 60+ service signatures, JSON/CSV export.</p>
-      <div class="chips"><span class="chip">asyncio</span><span class="chip">recon</span><span class="chip">17 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">sibat</a></h3>
+      <p>Scope-locked attack-surface framework: passive subdomain enum via certificate transparency, CORS misconfiguration probe, JavaScript secret and endpoint extraction, 95-path content discovery, three exploit modules, and an operator dashboard. The Scope Guard refuses any target outside the loaded rules of engagement — enforced before a single packet is sent.</p>
+      <div class="tags"><span class="tag hot">scope guard</span><span class="tag">subdomain enum</span><span class="tag">CORS</span><span class="tag">exploit modules</span><span class="tag">10 modules</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.06s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M18 8h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1"/><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">phishguard</a></h3>
+    <div class="pcard rv" style="--d:.06s" data-cat="blue">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="pcard-cat">DEFENSIVE / SIEM</div>
       </div>
-      <p>Static phishing URL detector — 30+ lexical heuristics: brand spoofing, IDN homoglyphs, credential-bait keywords. Scores any URL 0-100, fully offline.</p>
-      <div class="chips"><span class="chip">heuristics</span><span class="chip">OSINT</span><span class="chip">21 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/tanggol" target="_blank" rel="noopener">tanggol</a></h3>
+      <p>Personal war room: honeypot traps (SSH, HTTP, port-sweep decoys) feed a thread-safe SQLite event store; brute-force and portscan detectors fire alerts with verified thresholds; a terminal-styled SIEM dashboard and a Three.js 3D attack globe render the battlefield live. POST feed API accepts events from other machines.</p>
+      <div class="tags"><span class="tag hot">honeypot</span><span class="tag">SIEM</span><span class="tag">3D globe</span><span class="tag">detectors</span><span class="tag">feed API</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/tanggol" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.12s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">hashbreak</a></h3>
+    <div class="pcard rv" style="--d:.12s" data-cat="ml">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.5"/></svg></div>
+        <div class="pcard-cat">MACHINE LEARNING</div>
       </div>
-      <p>Hash identification for 18+ formats, rule-augmented dictionary cracking with salt support, and offline password strength auditing.</p>
-      <div class="chips"><span class="chip">crypto</span><span class="chip">audit</span><span class="chip">27 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/ml-detector" target="_blank" rel="noopener">ml-detector</a></h3>
+      <p>A spam and phishing classifier with every layer hand-implemented: tokenizer, Bag-of-Words vectorization, Multinomial Naive Bayes with Laplace smoothing, log-space classification, softmax confidence, and a from-scratch evaluation suite. Trains in 0.4 seconds, no numpy, no sklearn, no GPU. Classifies unseen scam messages at 100% and lookalike URLs at 89-100%.</p>
+      <div class="tags"><span class="tag hot">naive bayes</span><span class="tag">from scratch</span><span class="tag">no frameworks</span><span class="tag">0.4s train</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/ml-detector" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">logsentinel</a></h3>
+    <div class="pcard rv" data-cat="agents">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 7V4"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h6"/></svg></div>
+        <div class="pcard-cat">AGENTS / TELEGRAM</div>
       </div>
-      <p>SSH/auth log intrusion analysis: brute-force bursts, password-spray campaigns, and the alert that matters — successful logins after failed ones.</p>
-      <div class="chips"><span class="chip">SIEM</span><span class="chip">blue team</span><span class="chip">16 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">kab0t</a></h3>
+      <p>Personal agent commanded over Telegram in Taglish. Bring-your-own-key AI brain (Groq, Gemini fallback), persistent memory across sessions, and a plugin skill system: study-note generation, scam-pattern vetting, deal-criteria storage. Owner-locked to one account on first contact.</p>
+      <div class="tags"><span class="tag hot">telegram</span><span class="tag">BYO-key AI</span><span class="tag">plugin skills</span><span class="tag">persistent memory</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.06s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">certwatch</a></h3>
+    <div class="pcard rv" style="--d:.06s" data-cat="blue">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.4 3 8.4 7 10 4-1.6 7-5.6 7-10V6l-7-3Z"/><path d="M12 8v4"/><path d="M12 15h.01"/></svg></div>
+        <div class="pcard-cat">DEFENSIVE / FAMILY</div>
       </div>
-      <p>TLS certificate watchdog: expiry countdown, self-signed detection via CA validation, weak-key flags, wildcard-aware hostname/SAN matching.</p>
-      <div class="chips"><span class="chip">TLS</span><span class="chip">x509</span><span class="chip">live-tested</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/bantay" target="_blank" rel="noopener">bantay</a></h3>
+      <p>Family scam defense center: paste a suspicious SMS, get a verdict in plain Taglish with the reasoning and the exact action to take. 18 weighted rules, instant-scam override for OTP theft, a breach-database monitor, and a radar of current PH scam waves. 9-test suite validates every verdict path.</p>
+      <div class="tags"><span class="tag hot">taglish</span><span class="tag">18 rules</span><span class="tag">breach monitor</span><span class="tag">scam radar</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/bantay" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.12s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">redact</a></h3>
+    <div class="pcard rv" style="--d:.12s" data-cat="blue">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
+        <div class="pcard-cat">DEFENSIVE / LOG ANALYSIS</div>
       </div>
-      <p>Secret scanner with 20+ credential rules — AWS keys, GitHub tokens, PEM blocks, DB URIs — entropy-filtered, with in-place auto-redaction.</p>
-      <div class="chips"><span class="chip">CI gate</span><span class="chip">regex</span><span class="chip">17 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">logsentinel</a></h3>
+      <p>SSH and auth-log intrusion analyzer: brute-force bursts, password-spray campaigns, and the alert that matters — successful logins after failures. Severity-ranked alerts, top attacker tables, CSV IOC extraction. 16 tests on realistic fixture logs.</p>
+      <div class="tags"><span class="tag">SIEM</span><span class="tag">brute force</span><span class="tag">IOC</span><span class="tag">16 tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">sysarmor</a></h3>
+    <div class="pcard rv" data-cat="offsec">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M5 12.85a8 8 0 1 1 14 0c0 2.1-.7 3.6-1.5 4.6-.6.8-1.5 1.4-2.5 1.4h-2c-1 0-1.9-.6-2.5-1.4-.8-1-1.5-2.5-1.5-4.6Z"/></svg></div>
+        <div class="pcard-cat">OFFENSIVE / RECON</div>
       </div>
-      <p>Linux hardening auditor: CIS-style checks on SSH config, permissions, sysctl, accounts — scores a host 0-100 with per-check remediation.</p>
-      <div class="chips"><span class="chip">CIS</span><span class="chip">hardening</span><span class="chip">16 tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">netrecon</a></h3>
+      <p>Async TCP port scanner: 500 concurrent connections, banner grabbing, 60+ service fingerprints, JSON/CSV export. The 17-test integration suite spins up live TCP servers — no mocks anywhere.</p>
+      <div class="tags"><span class="tag">asyncio</span><span class="tag">port scan</span><span class="tag">17 tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.06s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/><path d="M7.5 11h7"/><path d="M7.5 11 6 9.5"/><path d="m14.5 11 1.5 1.5"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">sibat</a></h3>
+    <div class="pcard rv" style="--d:.06s" data-cat="blue">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="pcard-cat">DEFENSIVE / HARDENING</div>
       </div>
-      <p>Scope-locked recon framework: passive subdomain enumeration (crt.sh, certspotter), CORS misconfig probe, JavaScript secret/endpoint scanner, 95-path content discovery. A Scope Guard refuses any target outside the loaded rules of engagement — verified live against its own vulnerable lab.</p>
-      <div class="chips"><span class="chip">recon</span><span class="chip">subdomains</span><span class="chip">CORS</span><span class="chip">scope guard</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">sysarmor</a></h3>
+      <p>Linux hardening auditor: CIS-style checks across SSH config, file permissions, sysctl parameters, account hygiene, and pending updates. Scores a host 0-100 with per-check remediation guidance. Verified on a live Fedora system; 16 tests.</p>
+      <div class="tags"><span class="tag">CIS</span><span class="tag">hardening</span><span class="tag">0-100 score</span><span class="tag">16 tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.12s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 7V4"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h6"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">kab0t</a></h3>
+    <div class="pcard rv" style="--d:.12s" data-cat="offsec">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg></div>
+        <div class="pcard-cat">OFFENSIVE / CRYPTO</div>
       </div>
-      <p>Personal Telegram agent that speaks Taglish. BYO-key AI brain (Groq, Gemini fallback), persistent memory, and swappable skills: aral (study notes), vet (scam red-flags), deal (saved hunting criteria). Owner-locked, pure stdlib.</p>
-      <div class="chips"><span class="chip">telegram</span><span class="chip">agent</span><span class="chip">BYO-key AI</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">hashbreak</a></h3>
+      <p>Hash identification for 18+ formats, rule-augmented dictionary cracking (leetspeak mutations, salt positions), and entropy-based password strength auditing. 27 tests across identification, cracking, and scoring.</p>
+      <div class="tags"><span class="tag">crypto</span><span class="tag">18+ formats</span><span class="tag">27 tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h.01"/><path d="M15 17h.01"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">UlatBayan</a></h3>
+    <div class="pcard rv" data-cat="offsec">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1"/><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/></svg></div>
+        <div class="pcard-cat">OFFENSIVE / PHISHING</div>
       </div>
-      <p>Barangay complaint & reporting system — full-stack civic app in one file, zero dependencies. Residents file & track reports; officials triage behind PBKDF2 auth; public transparency board shows the community what is being done.</p>
-      <div class="chips"><span class="chip">civic-tech</span><span class="chip">fullstack</span><span class="chip">CSRF/XSS-hardened</span><span class="chip">18 e2e tests</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">phishguard</a></h3>
+      <p>Offline phishing URL detector: 30+ lexical heuristics covering brand-spoof subdomains, punycode homoglyphs, and credential-bait paths. Scores any URL 0-100 with zero network calls. 21 tests validate known-bad patterns fire and benign URLs stay quiet.</p>
+      <div class="tags"><span class="tag">heuristics</span><span class="tag">30+ rules</span><span class="tag">offline</span><span class="tag">21 tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
-    <div class="card reveal" style="--d:.06s">
-      <div class="card-head">
-        <div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-.9-8.9"/><path d="M6.3 10.6A6 6 0 1 1 17.5 19"/><path d="m12 12 3 2"/><path d="m15 14 3-4"/></svg></div>
-        <h3><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">Weather App (Baler)</a></h3>
+    <div class="pcard rv" style="--d:.06s" data-cat="blue">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="pcard-cat">DEFENSIVE / TLS</div>
       </div>
-      <p>Localized weather forecasting platform integrating real-time OpenWeather API streams — won <b>Best Innovation Award</b> at its competition debut.</p>
-      <div class="chips"><span class="chip">HTML/CSS/JS</span><span class="chip">REST API</span><span class="chip">award-winning</span></div>
-      <div class="card-links"><a href="https://github.com/Diavolo148888/Weather-App-Baler" target="_blank" rel="noopener">repo</a></div>
+      <h3><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">certwatch</a></h3>
+      <p>TLS certificate watchdog: expiry countdown, self-signed detection via system-CA validation, weak-key flags, wildcard-aware SAN matching. Parses raw DER with the standard library only; live-tested against real TLS endpoints.</p>
+      <div class="tags"><span class="tag">TLS</span><span class="tag">x509</span><span class="tag">live-tested</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">REPO</a></div>
+    </div>
+
+    <div class="pcard rv" style="--d:.12s" data-cat="blue">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 3 8 5v5c0 4 2 7.5 4 8.6 2-1.1 4-4.6 4-8.6V5l-4-2Z"/><path d="m10 11 1.5 1.5L14.5 9.5"/></svg></div>
+        <div class="pcard-cat">DEFENSIVE / CI GATE</div>
+      </div>
+      <h3><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">redact</a></h3>
+      <p>Secret scanner and CI gate: 20+ credential rules (AWS keys, GitHub tokens, PEM blocks, DB URIs) with entropy filtering to suppress false positives. In-place auto-redaction mode and an exit-code gate for pipelines. 17 tests including false-positive guards.</p>
+      <div class="tags"><span class="tag">CI gate</span><span class="tag">20+ rules</span><span class="tag">auto-redact</span><span class="tag">17 tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">REPO</a></div>
+    </div>
+
+    <div class="pcard rv" data-cat="web">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h.01"/><path d="M15 17h.01"/></svg></div>
+        <div class="pcard-cat">CIVIC TECH / FULLSTACK</div>
+      </div>
+      <h3><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">ulatbayan</a></h3>
+      <p>Barangay complaint and reporting system in one file with zero dependencies, built for offline community use. Residents file and track reports; officials triage behind PBKDF2 auth, CSRF tokens, and rate limiting; a public transparency board shows aggregate stats. 18 end-to-end tests against a live server.</p>
+      <div class="tags"><span class="tag">civic tech</span><span class="tag">fullstack</span><span class="tag">CSRF/XSS-hardened</span><span class="tag">18 e2e tests</span></div>
+      <div class="plinks"><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">REPO</a></div>
+    </div>
+
+    <div class="pcard rv" style="--d:.06s" data-cat="web">
+      <div class="pcard-top">
+        <div class="pcard-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m8 21 4-3 4 3"/><path d="m7 9 2.5 2.5L7 14"/><path d="M12.5 14H17"/></svg></div>
+        <div class="pcard-cat">WEB / GAMES</div>
+      </div>
+      <h3><a href="https://diavolo148888.github.io/hacker-arcade/" target="_blank" rel="noopener">hacker-arcade</a></h3>
+      <p>Retro CRT arcade of security mini-games: Password Crack (hash cracking with leetspeak transform rules), Trace the Route (traceroute reasoning), Phish Spot (real lookalike-domain patterns), Port Roulette (service-port reflexes). Full CRT treatment: scanlines, flicker, BIOS boot sequence. Live on GitHub Pages.</p>
+      <div class="tags"><span class="tag">4 games</span><span class="tag">CRT aesthetic</span><span class="tag">vanilla JS</span><span class="tag hot">playable</span></div>
+      <div class="plinks"><a href="https://diavolo148888.github.io/hacker-arcade/" target="_blank" rel="noopener">PLAY</a><a href="https://github.com/Diavolo148888/hacker-arcade" target="_blank" rel="noopener">REPO</a></div>
     </div>
 
   </div>
@@ -515,184 +593,235 @@ footer {
 
 <!-- ================= EXPERIENCE ================= -->
 <section id="experience">
-  <div class="tag">cat experience.log</div>
-  <h2><span class="n">02.</span>Experience</h2>
-  <div class="timeline">
+  <div class="kicker">02 — OPERATIONS LOG</div>
+  <h2>Experience</h2>
+  <div class="tl">
 
-    <div class="titem reveal">
-      <div class="when">2024 — present</div>
+    <div class="ev rv">
+      <div class="when">2024 — PRESENT</div>
       <h3>IT Support & Cybersecurity Technical Lead</h3>
       <div class="org">Systems Support & Software Operations — Philippines</div>
       <ul>
-        <li>Diagnosed and reconfigured hardware, OSes, and network settings across multiple systems; applied structured root-cause analysis for Tier-1 resolution of OS glitches, driver conflicts, and network breakage.</li>
-        <li>Audited system logs and desktop environments for suspicious processes, malware, and persistence mechanisms.</li>
-        <li>Conducted security code reviews and vulnerability assessments on custom applications before deployment.</li>
-        <li>Provisioned and managed dual-boot Windows/Linux (Fedora, CachyOS) environments and Docker-based infrastructure.</li>
+        <li><b>Endpoint and network operations:</b> diagnosed, repaired, and reconfigured hardware, operating systems, and network settings across multiple systems; structured root-cause analysis for Tier-1 resolution of OS glitches, driver conflicts, and network breakage.</li>
+        <li><b>Security auditing:</b> audited system logs and desktop environments for suspicious processes, malware, and persistence mechanisms; ran hardening audits against CIS baselines on live Linux hosts.</li>
+        <li><b>Application security:</b> conducted security code reviews and vulnerability assessments on custom applications before deployment.</li>
+        <li><b>Infrastructure:</b> provisioned dual-boot Windows/Linux (Fedora, CachyOS) environments and Docker-based service infrastructure.</li>
       </ul>
     </div>
 
-    <div class="titem reveal" style="--d:.08s">
+    <div class="ev rv" style="--d:.08s">
       <div class="when">2023 — 2026</div>
       <h3>Operations & Technical Support Assistant</h3>
       <div class="org">Family Retail Business & Bubble Tea Shop</div>
       <ul>
-        <li>Supported daily operations 2+ years: 50+ transactions/day with zero cash discrepancies.</li>
-        <li>Troubleshot POS systems under live business pressure to minimize customer-facing downtime.</li>
-        <li>Built inventory workflows with Google Sheets (VLOOKUP, pivot tables) and trained new staff.</li>
+        <li>Ran daily operations for two years: <b>50+ transactions per day with zero cash discrepancies</b>.</li>
+        <li>Troubleshot POS systems live during business hours to keep customer-facing downtime near zero.</li>
+        <li>Automated inventory workflows with Google Sheets (VLOOKUP, pivot tables); trained new staff on procedures.</li>
       </ul>
     </div>
 
-    <div class="titem reveal" style="--d:.16s">
+    <div class="ev rv" style="--d:.16s">
       <div class="when">2025 — 2026</div>
       <h3>Vice President — Computer Society</h3>
       <div class="org">Aurora National Science High School</div>
       <ul>
-        <li>Led technical workshops on hardware assembly, troubleshooting, and networking for a 300+ member community.</li>
-        <li>Managed cross-functional teams delivering custom technical solutions for institutional events.</li>
+        <li>Led technical workshops (hardware assembly, troubleshooting, networking) for a <b>300+ member</b> community.</li>
+        <li>Coordinated technical operations for institutional events; managed cross-functional project teams.</li>
       </ul>
     </div>
 
-  </div>
-</section>
-
-<!-- ================= AWARDS ================= -->
-<section id="awards">
-  <div class="tag">ls -la trophies/</div>
-  <h2><span class="n">03.</span>Awards & Highlights</h2>
-  <div class="grid">
-    <div class="card reveal">
-      <div class="card-head"><div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/></svg></div><h3>Best Innovation Award</h3></div>
-      <p>Localized weather forecasting platform with real-time OpenWeather API integration, recognized for practical impact.</p>
-    </div>
-    <div class="card reveal" style="--d:.08s">
-      <div class="card-head"><div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-2 7 5.5-3 5.5 3-2-7"/></svg></div><h3>1st Place — Division Level</h3></div>
-      <p>Smart AI Energy-Saving Optimization System: IoT microcontroller device with decision logic optimizing power distribution.</p>
-    </div>
-    <div class="card reveal" style="--d:.16s">
-      <div class="card-head"><div class="card-icon"><svg class="icn" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div><h3>Classroom Software in Production</h3></div>
-      <p>Custom educational applications developed with two high-school teachers — still used in live classroom instruction.</p>
-    </div>
   </div>
 </section>
 
 <!-- ================= SKILLS ================= -->
 <section id="skills">
-  <div class="tag">uname -a && python3 --version</div>
-  <h2><span class="n">04.</span>Skills</h2>
-  <div class="skills">
-    <div class="skill-cat reveal">
-      <h3>Security</h3>
+  <div class="kicker">03 — CAPABILITY MATRIX</div>
+  <h2>Skills</h2>
+  <div class="skills-grid">
+
+    <div class="scat rv">
+      <h3>SECURITY OPERATIONS</h3>
       <ul>
-        <li>Nmap & network recon</li>
-        <li>Log analysis</li>
-        <li>Vulnerability scanning</li>
-        <li>Malware analysis</li>
-        <li>Security code review</li>
+        <li>log analysis</li><li>incident triage</li><li>threat detection</li>
+        <li>vulnerability management</li><li>CIS hardening</li><li>malware analysis</li>
+        <li>phishing detection</li><li>honeypots</li>
       </ul>
     </div>
-    <div class="skill-cat reveal" style="--d:.08s">
-      <h3>Systems</h3>
+    <div class="scat rv" style="--d:.08s">
+      <h3>OFFENSIVE / RECON</h3>
       <ul>
-        <li>Linux (Fedora, CachyOS)</li>
-        <li>Bash scripting</li>
-        <li>Docker</li>
-        <li>systemctl / journald</li>
-        <li>Dual-boot provisioning</li>
+        <li>network recon</li><li>subdomain enumeration</li><li>port scanning</li>
+        <li>CORS testing</li><li>secret detection</li><li>scope enforcement</li>
+        <li>report writing</li>
       </ul>
     </div>
-    <div class="skill-cat reveal" style="--d:.16s">
-      <h3>Development</h3>
+    <div class="scat rv" style="--d:.16s">
+      <h3>SYSTEMS & LINUX</h3>
       <ul>
-        <li>Python</li>
-        <li>C/C++</li>
-        <li>HTML/CSS/JS</li>
-        <li>SQL & REST APIs</li>
-        <li>Git/GitHub</li>
+        <li>Fedora / CachyOS</li><li>Bash</li><li>Docker</li>
+        <li>systemd / journald</li><li>NetworkManager</li><li>dual-boot</li><li>TCP/IP</li>
       </ul>
     </div>
-    <div class="skill-cat reveal" style="--d:.24s">
-      <h3>IT Support</h3>
+    <div class="scat rv" style="--d:.24s">
+      <h3>DEVELOPMENT</h3>
       <ul>
-        <li>Hardware diagnostics</li>
-        <li>OS installation & repair</li>
-        <li>Network troubleshooting</li>
-        <li>Technical documentation</li>
-        <li>Customer-facing support</li>
+        <li>Python (asyncio)</li><li>from-scratch ML</li><li>C/C++</li>
+        <li>HTML/CSS/JS</li><li>SQL / SQLite</li><li>REST APIs</li><li>Git</li>
+        <li>Telegram API</li>
       </ul>
     </div>
+    <div class="scat rv" style="--d:.32s">
+      <h3>IT SUPPORT</h3>
+      <ul>
+        <li>hardware diagnostics</li><li>OS install/repair</li><li>network troubleshooting</li>
+        <li>technical documentation</li><li>user training</li>
+      </ul>
+    </div>
+    <div class="scat rv" style="--d:.4s">
+      <h3>LANGUAGES</h3>
+      <ul>
+        <li>English (professional)</li><li>Filipino (native)</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
 <!-- ================= RESUME CTA ================= -->
 <section id="resume">
-  <div class="resume-box reveal">
-    <div class="tag">wget resume.pdf</div>
-    <h2>Want the full picture?</h2>
-    <p>One page with everything: education timeline, detailed project bullets, leadership history, and contact information.</p>
-    <a class="btn btn-primary" href="resume.html">View resume</a>
+  <div class="cta-box rv">
+    <div class="kicker" style="justify-content:center;">04 — THE PAPER TRAIL</div>
+    <h2>One page. Everything. Print-ready.</h2>
+    <p>The resume exists as a print-optimized page and a ready-to-send DOCX — education timeline, project bullets, leadership history, contact information.</p>
+    <div class="hero-cta" style="justify-content:center;">
+      <a class="btn btn-solid" href="resume.html">View resume</a>
+      <a class="btn btn-line" href="John-Mark-Alojado-Resume.docx" download>Download DOCX</a>
+    </div>
   </div>
 </section>
 
+</main>
+
 <footer>
-  Built with vanilla HTML/CSS — no frameworks, no trackers.
-  <br>© 2026 John Mark Alojado · Baler, Aurora, Philippines ·
-  <a href="https://github.com/Diavolo148888" target="_blank" rel="noopener">GitHub</a> ·
-  <a href="https://www.linkedin.com/in/john-mark-alojado" target="_blank" rel="noopener">LinkedIn</a>
+  <div>JOHN MARK ALOJADO · BALER, AURORA, PHILIPPINES</div>
+  <div class="fline">
+    <a href="https://github.com/Diavolo148888" target="_blank" rel="noopener">GITHUB</a>
+    <a href="https://www.linkedin.com/in/john-mark-alojado" target="_blank" rel="noopener">LINKEDIN</a>
+    <a href="mailto:alojadojohnmark@gmail.com">EMAIL</a>
+  </div>
+  <div style="margin-top:0.6rem; color:var(--text-faint);">VANILLA HTML/CSS/JS — NO FRAMEWORKS, NO TRACKERS</div>
 </footer>
 
 <script>
 (function () {
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // project ticker: types each repo letter-by-letter, pauses, deletes, cycles to the next
-  var repos = ['netrecon', 'phishguard', 'hashbreak', 'logsentinel', 'certwatch', 'redact', 'sysarmor', 'sibat', 'kab0t', 'ulatbayan'];
-  var prefix = 'https://github.com/Diavolo148888/';
-  var tickerEl = document.getElementById('ticker-path');
-  var tk = 0;
-  var ci = prefix.length;
-  var deleting = false;
-  function tick() {
-    if (reduced) { tickerEl.textContent = prefix + repos[0]; return; }
-    var full = prefix + repos[tk];
+  /* ---------- background network field: drifting nodes + links ---------- */
+  var canvas = document.getElementById('net');
+  if (canvas && !reduced) {
+    var ctx = canvas.getContext('2d');
+    var nodes = [], links = [];
+    var N = 46;
+    function resize() {
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    }
+    function init() {
+      nodes = [];
+      for (var i = 0; i < N; i++) {
+        nodes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: Math.random() * 1.4 + 0.6
+        });
+      }
+    }
+    function step() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // move
+      nodes.forEach(function (n) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+        if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+      });
+      // links
+      ctx.strokeStyle = 'rgba(77, 163, 255, 0.09)';
+      ctx.lineWidth = 1;
+      for (var i = 0; i < nodes.length; i++) {
+        for (var j = i + 1; j < nodes.length; j++) {
+          var a = nodes[i], b = nodes[j];
+          var dx = a.x - b.x, dy = a.y - b.y;
+          var d2 = dx * dx + dy * dy;
+          if (d2 < 150 * 150) {
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+      // nodes
+      ctx.fillStyle = 'rgba(0, 229, 160, 0.32)';
+      nodes.forEach(function (n) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(step);
+    }
+    resize(); init(); step();
+    window.addEventListener('resize', function () { resize(); init(); });
+  }
+
+  /* ---------- role typewriter (cycling) ---------- */
+  var roles = ['security tooling engineer', 'SOC-style log analyst', 'from-scratch ML builder', 'IT operations specialist'];
+  var tEl = document.getElementById('typed');
+  var ti = 0, ci = 0, deleting = false;
+  function typeRole() {
+    if (!tEl) return;
+    var full = roles[ti];
     if (!deleting) {
       ci++;
-      tickerEl.textContent = full.slice(0, ci);
-      if (ci >= full.length) { deleting = true; setTimeout(tick, 2100); return; }
-      setTimeout(tick, 34 + Math.random() * 46);
+      tEl.textContent = full.slice(0, ci);
+      if (ci >= full.length) { deleting = true; setTimeout(typeRole, 2300); return; }
+      setTimeout(typeRole, 42 + Math.random() * 44);
     } else {
-      ci -= 3;
-      if (ci <= prefix.length) {
-        ci = prefix.length;
-        deleting = false;
-        tk = (tk + 1) % repos.length;
-        tickerEl.textContent = prefix + repos[tk].slice(0, 0);
-        setTimeout(tick, 420);
+      ci -= 2;
+      if (ci <= 0) {
+        ci = 0; deleting = false; ti = (ti + 1) % roles.length;
+        tEl.textContent = '';
+        setTimeout(typeRole, 380);
         return;
       }
-      tickerEl.textContent = full.slice(0, ci);
-      setTimeout(tick, 16);
+      tEl.textContent = full.slice(0, ci);
+      setTimeout(typeRole, 15);
     }
   }
-  tick();
+  if (reduced) { tEl.textContent = roles[0]; } else { typeRole(); }
 
-  // scroll reveal
-  var reveals = document.querySelectorAll('.reveal');
+  /* ---------- marquee duplication for seamless loop ---------- */
+  var track = document.getElementById('mtrack');
+  if (track) track.innerHTML += track.innerHTML;
+
+  /* ---------- scroll reveal ---------- */
+  var reveals = document.querySelectorAll('.rv');
   if (reduced || !('IntersectionObserver' in window)) {
-    reveals.forEach(function (el) { el.classList.add('revealed'); });
+    reveals.forEach(function (el) { el.classList.add('in'); });
   } else {
     var ro = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('revealed'); ro.unobserve(e.target); }
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
     reveals.forEach(function (el) { ro.observe(el); });
   }
 
-  // animated counters
+  /* ---------- counters ---------- */
   function runCounter(el) {
     var target = parseInt(el.getAttribute('data-count'), 10) || 0;
     if (reduced || target === 0) { el.textContent = String(target); return; }
-    var dur = 1200, t0 = null;
+    var dur = 1300, t0 = null;
     function step(t) {
       if (!t0) t0 = t;
       var p = Math.min((t - t0) / dur, 1);
@@ -714,33 +843,50 @@ footer {
     nums.forEach(function (el) { co.observe(el); });
   }
 
-  // nav active-state on scroll
-  var links = document.querySelectorAll('nav ul a[href^="#"]');
-  var map = {};
-  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
-  var so = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      var a = map[e.target.id];
-      if (!a) return;
-      if (e.isIntersecting) {
-        links.forEach(function (l) { l.classList.remove('active'); });
-        a.classList.add('active');
-      }
+  /* ---------- project filters ---------- */
+  var btns = document.querySelectorAll('.chipbtn');
+  var cards = document.querySelectorAll('.pcard');
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      btns.forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      var f = b.getAttribute('data-f');
+      cards.forEach(function (c) {
+        var show = f === 'all' || c.getAttribute('data-cat') === f;
+        c.classList.toggle('hidden', !show);
+        if (show) { c.classList.remove('in'); void c.offsetWidth; c.classList.add('in'); }
+      });
     });
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  ['projects', 'experience', 'skills'].forEach(function (id) {
-    var s = document.getElementById(id);
-    if (s) so.observe(s);
   });
 
-  // card spotlight follows cursor
+  /* ---------- card spotlight ---------- */
   if (!reduced) {
-    document.querySelectorAll('.card').forEach(function (card) {
+    document.querySelectorAll('.pcard').forEach(function (card) {
       card.addEventListener('pointermove', function (ev) {
         var r = card.getBoundingClientRect();
         card.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100) + '%');
         card.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100) + '%');
       });
+    });
+  }
+
+  /* ---------- nav active state ---------- */
+  var links = document.querySelectorAll('nav ul a[href^="#"]');
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var so = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var a = map[e.target.id];
+        if (a && e.isIntersecting) {
+          links.forEach(function (l) { l.classList.remove('active'); });
+          a.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    ['work', 'experience', 'skills'].forEach(function (id) {
+      var s = document.getElementById(id);
+      if (s) so.observe(s);
     });
   }
 })();
