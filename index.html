@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>John Mark Alojado — Security Engineering & IT Operations</title>
-<meta name="description" content="Portfolio of John Mark Alojado — security tooling engineer and IT operations specialist. 12 open-source repos: attack frameworks, SIEM, ML classifiers, agents.">
+<meta name="description" content="Portfolio of John Mark Alojado — security tooling engineer and IT operations specialist. 14 open-source repos: attack frameworks, SIEM, ML classifiers, agents.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23050a12'/><path d='M16 5 8 8v6c0 5.5 3.4 9.7 8 11 4.6-1.3 8-5.5 8-11V8l-8-3Z' fill='none' stroke='%2300e5a0' stroke-width='2'/></svg>">
 <style>
 /* ============ DESIGN TOKENS ============ */
@@ -293,14 +293,23 @@ h1 .thin { color: var(--text-dim); font-weight: 300; }
 }
 .pcard:hover::before { opacity: 1; }
 .pcard.hidden { display: none; }
-.pcard-top { display: flex; align-items: center; justify-content: space-between; }
-.pcard-ic {
-  width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
-  background: rgba(0, 229, 160, 0.07); border: 1px solid rgba(0, 229, 160, 0.16);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.pshot {
+  position: relative; border-radius: 10px; overflow: hidden;
+  border: 1px solid rgba(120, 170, 235, 0.18); background: var(--bg-card);
+  aspect-ratio: 16 / 9; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 22px rgba(0, 0, 0, 0.3);
 }
-.pcard:hover .pcard-ic { transform: rotate(-5deg) scale(1.06); }
-.pcard-ic svg { width: 21px; height: 21px; stroke: var(--accent); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.pshot img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
+  filter: saturate(0.95) contrast(1.02);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s;
+}
+.pcard:hover .pshot img { transform: scale(1.03); filter: saturate(1); }
+.pshot .pcard-cat {
+  position: absolute; left: 8px; bottom: 8px; z-index: 2;
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; color: var(--text);
+  background: rgba(5, 10, 18, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  padding: 3px 9px; border-radius: 6px; border: 1px solid rgba(120, 170, 235, 0.2);
+}
 .pcard-cat { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; color: var(--text-faint); }
 .pcard h3 { font-size: 1.06rem; font-weight: 700; letter-spacing: -0.01em; }
 .pcard h3 a { color: var(--text); }
@@ -365,6 +374,29 @@ h1 .thin { color: var(--text-dim); font-weight: 300; }
 }
 .scat li:hover { border-color: var(--accent); transform: translateY(-2px); }
 
+/* ============ CRT BOOT INTRO ============ */
+#boot {
+  position: fixed; inset: 0; z-index: 1000;
+  background: #03080c;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  transition: opacity 0.65s ease, visibility 0.65s;
+}
+#boot.done { opacity: 0; visibility: hidden; pointer-events: none; }
+#boot::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0, 229, 160, 0.035) 0 1px, transparent 1px 3px);
+}
+.boot-in { width: min(560px, 86vw); font-size: 0.82rem; line-height: 2.1; position: relative; z-index: 1; }
+.bl { display: flex; justify-content: space-between; gap: 1rem; opacity: 0.94; }
+.bl-l { color: var(--text-dim); white-space: nowrap; overflow: hidden; }
+.bl-r { white-space: nowrap; font-weight: 600; }
+.bl-r.ok { color: var(--accent); }
+.bl-r.err { color: var(--danger); }
+.boot-hint { position: absolute; bottom: 26px; left: 0; right: 0; text-align: center; z-index: 1;
+  color: var(--text-faint); font-size: 0.66rem; letter-spacing: 0.22em; }
+@media (prefers-reduced-motion: reduce) { #boot { display: none; } }
+
 /* ============ RESUME CTA ============ */
 .cta-box {
   border: 1px solid rgba(120, 170, 235, 0.16); border-radius: 16px; text-align: center;
@@ -426,6 +458,11 @@ footer a:hover { color: var(--accent); }
 </head>
 <body>
 
+<div id="boot">
+  <div class="boot-in" id="boot-in"></div>
+  <div class="boot-hint">PRESS ANY KEY TO SKIP</div>
+</div>
+
 <div class="field">
   <canvas id="net"></canvas>
   <div class="gridlines"></div>
@@ -449,7 +486,7 @@ footer a:hover { color: var(--accent); }
 <section id="hero">
   <div class="hero-grid">
     <div>
-      <div class="hero-badge rv in"><b>12</b> REPOS SHIPPED · <b>9</b> TEST SUITES · ZERO-DEP ENGINEERING</div>
+      <div class="hero-badge rv in"><b>14</b> REPOS SHIPPED · <b>10</b> TEST SUITES · ZERO-DEP ENGINEERING</div>
       <h1 class="rv in" style="--d:.08s">John Mark <span class="thin">Alojado</span></h1>
       <div class="roles rv in" style="--d:.16s"><span class="fixed">$ whoami — </span><span class="typed" id="typed"></span><span class="caret"></span></div>
       <p class="hero-sub rv in" style="--d:.24s">
@@ -492,8 +529,8 @@ footer a:hover { color: var(--accent); }
 <!-- ================= NUMBERS ================= -->
 <section id="numbers">
   <div class="stats-band">
-    <div class="stat rv"><div class="num" data-count="12">0</div><div class="lbl">open-source repos</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 12 7 8 13 10 19 4 25 2" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
-    <div class="stat rv" style="--d:.07s"><div class="num" data-count="9">0</div><div class="lbl">test suites shipped</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 11 7 11 13 7 19 8 25 3" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
+    <div class="stat rv"><div class="num" data-count="14">0</div><div class="lbl">open-source repos</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 12 7 8 13 10 19 4 25 2" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
+    <div class="stat rv" style="--d:.07s"><div class="num" data-count="10">0</div><div class="lbl">test suites shipped</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 11 7 11 13 7 19 8 25 3" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
     <div class="stat rv" style="--d:.14s"><div class="num" data-count="0">0</div><div class="lbl">external dependencies</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 7h24" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
     <div class="stat rv" style="--d:.21s"><div class="num" data-count="2">0</div><div class="lbl">competition awards</div><svg class="spark" width="26" height="14" viewBox="0 0 26 14"><path d="M1 12 7 4 13 8 19 2 25 6" stroke="var(--accent)" fill="none" stroke-width="1.5"/></svg></div>
   </div>
@@ -519,10 +556,7 @@ footer a:hover { color: var(--accent); }
   <div class="pgrid" id="pgrid">
 
     <div class="pcard rv" data-cat="offsec">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="m21 21-4.3-4.3"/><path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/><path d="M7.5 11h7"/><path d="M7.5 11 6 9.5"/><path d="m14.5 11 1.5 1.5"/></svg></div>
-        <div class="pcard-cat">OFFENSIVE / RECON</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/sibat.jpg" alt="sibat screenshot" loading="lazy"><span class="pcard-cat">OFFENSIVE / RECON</span></div>
       <h3><a href="https://github.com/Diavolo148888/sibat" target="_blank" rel="noopener">sibat</a></h3>
       <p>Scope-locked attack-surface framework: passive subdomain enum via certificate transparency, CORS misconfiguration probe, JavaScript secret and endpoint extraction, 95-path content discovery, three exploit modules, and an operator dashboard. The Scope Guard refuses any target outside the loaded rules of engagement — enforced before a single packet is sent.</p>
       <div class="tags"><span class="tag hot">scope guard</span><span class="tag">subdomain enum</span><span class="tag">CORS</span><span class="tag">exploit modules</span><span class="tag">10 modules</span></div>
@@ -530,10 +564,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.06s" data-cat="blue">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <div class="pcard-cat">DEFENSIVE / SIEM</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/tanggol.jpg" alt="tanggol screenshot" loading="lazy"><span class="pcard-cat">DEFENSIVE / SIEM</span></div>
       <h3><a href="https://github.com/Diavolo148888/tanggol" target="_blank" rel="noopener">tanggol</a></h3>
       <p>Personal war room: honeypot traps (SSH, HTTP, port-sweep decoys) feed a thread-safe SQLite event store; brute-force and portscan detectors fire alerts with verified thresholds; a terminal-styled SIEM dashboard and a Three.js 3D attack globe render the battlefield live. POST feed API accepts events from other machines.</p>
       <div class="tags"><span class="tag hot">honeypot</span><span class="tag">SIEM</span><span class="tag">3D globe</span><span class="tag">detectors</span><span class="tag">feed API</span></div>
@@ -541,10 +572,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.12s" data-cat="ml">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.5"/></svg></div>
-        <div class="pcard-cat">MACHINE LEARNING</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/ml-detector.jpg" alt="ml-detector screenshot" loading="lazy"><span class="pcard-cat">MACHINE LEARNING</span></div>
       <h3><a href="https://github.com/Diavolo148888/ml-detector" target="_blank" rel="noopener">ml-detector</a></h3>
       <p>A spam and phishing classifier with every layer hand-implemented: tokenizer, Bag-of-Words vectorization, Multinomial Naive Bayes with Laplace smoothing, log-space classification, softmax confidence, and a from-scratch evaluation suite. Trains in 0.4 seconds, no numpy, no sklearn, no GPU. Classifies unseen scam messages at 100% and lookalike URLs at 89-100%.</p>
       <div class="tags"><span class="tag hot">naive bayes</span><span class="tag">from scratch</span><span class="tag">no frameworks</span><span class="tag">0.4s train</span></div>
@@ -552,10 +580,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" data-cat="agents">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 7V4"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h6"/></svg></div>
-        <div class="pcard-cat">AGENTS / TELEGRAM</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/kab0t.jpg" alt="kab0t screenshot" loading="lazy"><span class="pcard-cat">AGENTS / TELEGRAM</span></div>
       <h3><a href="https://github.com/Diavolo148888/kab0t" target="_blank" rel="noopener">kab0t</a></h3>
       <p>Personal agent commanded over Telegram in Taglish. Bring-your-own-key AI brain (Groq, Gemini fallback), persistent memory across sessions, and a plugin skill system: study-note generation, scam-pattern vetting, deal-criteria storage. Owner-locked to one account on first contact.</p>
       <div class="tags"><span class="tag hot">telegram</span><span class="tag">BYO-key AI</span><span class="tag">plugin skills</span><span class="tag">persistent memory</span></div>
@@ -563,10 +588,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.06s" data-cat="blue">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.4 3 8.4 7 10 4-1.6 7-5.6 7-10V6l-7-3Z"/><path d="M12 8v4"/><path d="M12 15h.01"/></svg></div>
-        <div class="pcard-cat">DEFENSIVE / FAMILY</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/bantay.jpg" alt="bantay screenshot" loading="lazy"><span class="pcard-cat">DEFENSIVE / FAMILY</span></div>
       <h3><a href="https://github.com/Diavolo148888/bantay" target="_blank" rel="noopener">bantay</a></h3>
       <p>Family scam defense center: paste a suspicious SMS, get a verdict in plain Taglish with the reasoning and the exact action to take. 18 weighted rules, instant-scam override for OTP theft, a breach-database monitor, and a radar of current PH scam waves. 9-test suite validates every verdict path.</p>
       <div class="tags"><span class="tag hot">taglish</span><span class="tag">18 rules</span><span class="tag">breach monitor</span><span class="tag">scam radar</span></div>
@@ -574,10 +596,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.12s" data-cat="blue">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
-        <div class="pcard-cat">DEFENSIVE / LOG ANALYSIS</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/logsentinel.jpg" alt="logsentinel screenshot" loading="lazy"><span class="pcard-cat">DEFENSIVE / LOG ANALYSIS</span></div>
       <h3><a href="https://github.com/Diavolo148888/logsentinel" target="_blank" rel="noopener">logsentinel</a></h3>
       <p>SSH and auth-log intrusion analyzer: brute-force bursts, password-spray campaigns, and the alert that matters — successful logins after failures. Severity-ranked alerts, top attacker tables, CSV IOC extraction. 16 tests on realistic fixture logs.</p>
       <div class="tags"><span class="tag">SIEM</span><span class="tag">brute force</span><span class="tag">IOC</span><span class="tag">16 tests</span></div>
@@ -585,10 +604,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" data-cat="offsec">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M5 12.85a8 8 0 1 1 14 0c0 2.1-.7 3.6-1.5 4.6-.6.8-1.5 1.4-2.5 1.4h-2c-1 0-1.9-.6-2.5-1.4-.8-1-1.5-2.5-1.5-4.6Z"/></svg></div>
-        <div class="pcard-cat">OFFENSIVE / RECON</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/netrecon.jpg" alt="netrecon screenshot" loading="lazy"><span class="pcard-cat">OFFENSIVE / RECON</span></div>
       <h3><a href="https://github.com/Diavolo148888/netrecon" target="_blank" rel="noopener">netrecon</a></h3>
       <p>Async TCP port scanner: 500 concurrent connections, banner grabbing, 60+ service fingerprints, JSON/CSV export. The 17-test integration suite spins up live TCP servers — no mocks anywhere.</p>
       <div class="tags"><span class="tag">asyncio</span><span class="tag">port scan</span><span class="tag">17 tests</span></div>
@@ -596,10 +612,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.06s" data-cat="blue">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <div class="pcard-cat">DEFENSIVE / HARDENING</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/sysarmor.jpg" alt="sysarmor screenshot" loading="lazy"><span class="pcard-cat">DEFENSIVE / HARDENING</span></div>
       <h3><a href="https://github.com/Diavolo148888/sysarmor" target="_blank" rel="noopener">sysarmor</a></h3>
       <p>Linux hardening auditor: CIS-style checks across SSH config, file permissions, sysctl parameters, account hygiene, and pending updates. Scores a host 0-100 with per-check remediation guidance. Verified on a live Fedora system; 16 tests.</p>
       <div class="tags"><span class="tag">CIS</span><span class="tag">hardening</span><span class="tag">0-100 score</span><span class="tag">16 tests</span></div>
@@ -607,10 +620,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.12s" data-cat="offsec">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg></div>
-        <div class="pcard-cat">OFFENSIVE / CRYPTO</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/hashbreak.jpg" alt="hashbreak screenshot" loading="lazy"><span class="pcard-cat">OFFENSIVE / CRYPTO</span></div>
       <h3><a href="https://github.com/Diavolo148888/hashbreak" target="_blank" rel="noopener">hashbreak</a></h3>
       <p>Hash identification for 18+ formats, rule-augmented dictionary cracking (leetspeak mutations, salt positions), and entropy-based password strength auditing. 27 tests across identification, cracking, and scoring.</p>
       <div class="tags"><span class="tag">crypto</span><span class="tag">18+ formats</span><span class="tag">27 tests</span></div>
@@ -618,10 +628,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" data-cat="offsec">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1"/><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/></svg></div>
-        <div class="pcard-cat">OFFENSIVE / PHISHING</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/phishguard.jpg" alt="phishguard screenshot" loading="lazy"><span class="pcard-cat">OFFENSIVE / PHISHING</span></div>
       <h3><a href="https://github.com/Diavolo148888/phishguard" target="_blank" rel="noopener">phishguard</a></h3>
       <p>Offline phishing URL detector: 30+ lexical heuristics covering brand-spoof subdomains, punycode homoglyphs, and credential-bait paths. Scores any URL 0-100 with zero network calls. 21 tests validate known-bad patterns fire and benign URLs stay quiet.</p>
       <div class="tags"><span class="tag">heuristics</span><span class="tag">30+ rules</span><span class="tag">offline</span><span class="tag">21 tests</span></div>
@@ -629,10 +636,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.06s" data-cat="blue">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-        <div class="pcard-cat">DEFENSIVE / TLS</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/certwatch.jpg" alt="certwatch screenshot" loading="lazy"><span class="pcard-cat">DEFENSIVE / TLS</span></div>
       <h3><a href="https://github.com/Diavolo148888/certwatch" target="_blank" rel="noopener">certwatch</a></h3>
       <p>TLS certificate watchdog: expiry countdown, self-signed detection via system-CA validation, weak-key flags, wildcard-aware SAN matching. Parses raw DER with the standard library only; live-tested against real TLS endpoints.</p>
       <div class="tags"><span class="tag">TLS</span><span class="tag">x509</span><span class="tag">live-tested</span></div>
@@ -640,10 +644,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.12s" data-cat="blue">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M12 3 8 5v5c0 4 2 7.5 4 8.6 2-1.1 4-4.6 4-8.6V5l-4-2Z"/><path d="m10 11 1.5 1.5L14.5 9.5"/></svg></div>
-        <div class="pcard-cat">DEFENSIVE / CI GATE</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/redact.jpg" alt="redact screenshot" loading="lazy"><span class="pcard-cat">DEFENSIVE / CI GATE</span></div>
       <h3><a href="https://github.com/Diavolo148888/redact" target="_blank" rel="noopener">redact</a></h3>
       <p>Secret scanner and CI gate: 20+ credential rules (AWS keys, GitHub tokens, PEM blocks, DB URIs) with entropy filtering to suppress false positives. In-place auto-redaction mode and an exit-code gate for pipelines. 17 tests including false-positive guards.</p>
       <div class="tags"><span class="tag">CI gate</span><span class="tag">20+ rules</span><span class="tag">auto-redact</span><span class="tag">17 tests</span></div>
@@ -651,10 +652,7 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" data-cat="web">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 17h.01"/><path d="M15 17h.01"/></svg></div>
-        <div class="pcard-cat">CIVIC TECH / FULLSTACK</div>
-      </div>
+      <div class="pshot"><img src="assets/shots/web/ulatbayan.jpg" alt="ulatbayan screenshot" loading="lazy"><span class="pcard-cat">CIVIC TECH / FULLSTACK</span></div>
       <h3><a href="https://github.com/Diavolo148888/ulatbayan" target="_blank" rel="noopener">ulatbayan</a></h3>
       <p>Barangay complaint and reporting system in one file with zero dependencies, built for offline community use. Residents file and track reports; officials triage behind PBKDF2 auth, CSRF tokens, and rate limiting; a public transparency board shows aggregate stats. 18 end-to-end tests against a live server.</p>
       <div class="tags"><span class="tag">civic tech</span><span class="tag">fullstack</span><span class="tag">CSRF/XSS-hardened</span><span class="tag">18 e2e tests</span></div>
@@ -662,11 +660,8 @@ footer a:hover { color: var(--accent); }
     </div>
 
     <div class="pcard rv" style="--d:.06s" data-cat="web">
-      <div class="pcard-top">
-        <div class="pcard-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m8 21 4-3 4 3"/><path d="m7 9 2.5 2.5L7 14"/><path d="M12.5 14H17"/></svg></div>
-        <div class="pcard-cat">WEB / GAMES</div>
-      </div>
-      <h3><a href="https://diavolo148888.github.io/hacker-arcade/" target="_blank" rel="noopener">hacker-arcade</a></h3>
+      <div class="pshot"><img src="assets/shots/web/hacker-arcade.jpg" alt="hacker-arcade screenshot" loading="lazy"><span class="pcard-cat">WEB / GAMES</span></div>
+      <h3><a href="https://diavolo148888.github.io/hacker-arcade" target="_blank" rel="noopener">hacker-arcade</a></h3>
       <p>Retro CRT arcade of security mini-games: Password Crack (hash cracking with leetspeak transform rules), Trace the Route (traceroute reasoning), Phish Spot (real lookalike-domain patterns), Port Roulette (service-port reflexes). Full CRT treatment: scanlines, flicker, BIOS boot sequence. Live on GitHub Pages.</p>
       <div class="tags"><span class="tag">4 games</span><span class="tag">CRT aesthetic</span><span class="tag">vanilla JS</span><span class="tag hot">playable</span></div>
       <div class="plinks"><a href="https://diavolo148888.github.io/hacker-arcade/" target="_blank" rel="noopener">PLAY</a><a href="https://github.com/Diavolo148888/hacker-arcade" target="_blank" rel="noopener">REPO</a></div>
@@ -798,6 +793,55 @@ footer a:hover { color: var(--accent); }
 <script>
 (function () {
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- CRT boot intro: fake 404 terminal, once per session, skippable ---------- */
+  var bootEl = document.getElementById('boot');
+  function skipBoot() {
+    if (!bootEl || bootEl.classList.contains('done')) return;
+    bootEl.classList.add('done');
+    setTimeout(function () { if (bootEl && bootEl.parentNode) bootEl.parentNode.removeChild(bootEl); }, 700);
+  }
+  (function bootInit() {
+    if (!bootEl) return;
+    if (reduced || sessionStorage.getItem('jm-sh-boot') ||
+        new URLSearchParams(location.search).has('noboot')) {
+      bootEl.parentNode.removeChild(bootEl);
+      bootEl = null;
+      return;
+    }
+    sessionStorage.setItem('jm-sh-boot', '1');
+    var seq = [
+      ['GET /portfolio', '404 NOT FOUND', 'err'],
+      ['GET /', 'rerouting to secure origin', 'ok'],
+      ['handshake TLS 1.3', 'ESTABLISHED', 'ok'],
+      ['loading arsenal', '14 REPOS', 'ok'],
+      ['verifying test suites', '10/10 PASS', 'ok'],
+      ['access granted', '_welcome', 'ok']
+    ];
+    var inbox = document.getElementById('boot-in');
+    var li = 0;
+    function typeLine() {
+      if (!bootEl || bootEl.classList.contains('done')) return;
+      if (li >= seq.length) { setTimeout(skipBoot, 700); return; }
+      var row = document.createElement('div');
+      row.className = 'bl';
+      var left = document.createElement('span'); left.className = 'bl-l';
+      var right = document.createElement('span'); right.className = 'bl-r ' + seq[li][2];
+      row.appendChild(left); row.appendChild(right);
+      inbox.appendChild(row);
+      var txt = seq[li][0], ci = 0;
+      (function tick() {
+        if (!bootEl || bootEl.classList.contains('done')) return;
+        if (ci <= txt.length) { left.textContent = txt.slice(0, ci); ci++; setTimeout(tick, 15); }
+        else { right.textContent = seq[li][1]; li++; setTimeout(typeLine, 170); }
+      })();
+    }
+    typeLine();
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) {
+      window.addEventListener(ev, skipBoot, { passive: true });
+    });
+    setTimeout(skipBoot, 4600);
+  })();
 
   /* ---------- background network field: drifting nodes + links ---------- */
   var canvas = document.getElementById('net');
